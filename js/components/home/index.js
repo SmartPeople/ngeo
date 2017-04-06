@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+// import { TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
+import { Footer, FooterTab } from 'native-base';
 
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
@@ -60,6 +61,24 @@ class Home extends Component {
         <Content>
           <GeolLocationFullList />
         </Content>
+
+        <Footer >
+          <FooterTab>
+            <Button active onPress={() => alert('home')}>
+              <Icon name="apps" />
+              <Text>Home</Text>
+            </Button>
+            <Button>
+              <Icon name="camera" onPress={() => alert('blankPage')} />
+              <Text>Log</Text>
+            </Button>
+            <Button>
+              <Icon active name="navigate" />
+              <Text>Map</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+
       </Container>
     );
   }

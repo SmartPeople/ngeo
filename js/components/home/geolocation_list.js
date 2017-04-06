@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Container, List, ListItem } from 'native-base';
+import { Text, List, ListItem } from 'native-base';
 
 function round(ts) {
   return Math.round(ts * 100) / 100;
