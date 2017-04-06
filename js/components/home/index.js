@@ -3,17 +3,21 @@ import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
-import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right } from 'native-base';
-import { Grid, Row } from 'react-native-easy-grid';
+import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
+import { Grid, Row } from 'git ';
 
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 import styles from './styles';
 
+// import { GeolocationExample } from './geolocation_example';
+import { GeolLocationFullList } from './geolocation_list.js';
+
 const {
   reset,
   pushRoute,
 } = actions;
+
 
 class Home extends Component {
 
@@ -35,6 +39,13 @@ class Home extends Component {
   }
 
   render() {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            var initialPosition = JSON.stringify(position);
+          },
+          (error) => alert(JSON.stringify(error)),
+          {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+        );
     return (
       <Container style={styles.container}>
         <Header>
@@ -56,18 +67,20 @@ class Home extends Component {
         </Header>
 
         <Content>
-          <Grid style={styles.mt}>
-            {this.props.list.map((item, i) =>
-              <Row key={i}>
-                <TouchableOpacity
-                  style={styles.row}
-                  onPress={() => this.pushRoute('blankPage', i)}
-                >
-                  <Text style={styles.text}>{item}</Text>
-                </TouchableOpacity>
-              </Row>
-            )}
-          </Grid>
+          <GeolLocationFullList />
+          {/*<Grid style={styles.mt}>*/}
+            {/*{this.props.list.map((item, i) =>*/}
+              {/*<Row key={i}>*/}
+                {/*<TouchableOpacity*/}
+                  {/*style={styles.row}*/}
+                  {/*onPress={() => this.pushRoute('blankPage', i)}*/}
+                {/*>*/}
+                  {/*<Text style={styles.text}>{item}</Text>*/}
+                {/*</TouchableOpacity>*/}
+              {/*</Row>*/}
+            {/*)}*/}
+          {/*</Grid>*/}
+          {/*<GeolocationExample />*/}
         </Content>
       </Container>
     );
