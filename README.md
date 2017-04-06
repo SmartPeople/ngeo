@@ -6,11 +6,6 @@
 -	[Technologies](#technologies)
 -	[Get Started](#get-started)
 
-
-## Screens
-
- ![ios-demo](/Screenshots/iOS/demo.gif)
-
 ## Technologies
 *Technologies used in Native Starter Kit*
 
