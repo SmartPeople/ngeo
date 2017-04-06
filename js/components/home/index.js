@@ -69,11 +69,11 @@ class Home extends Component {
               <Text>Home</Text>
             </Button>
             <Button>
-              <Icon name="camera" onPress={() => alert('blankPage')} />
+              <Icon name="list" onPress={() => alert('blankPage')} />
               <Text>Log</Text>
             </Button>
             <Button>
-              <Icon active name="navigate" />
+              <Icon active name="map" />
               <Text>Map</Text>
             </Button>
           </FooterTab>
