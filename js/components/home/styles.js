@@ -4,7 +4,7 @@ export default {
   },
   row: {
     flex: 1,
-    marginTop: 20
+    marginTop: 16
   },
   text: {
     fontSize: 20,
@@ -15,7 +15,7 @@ export default {
     marginTop: 18,
   },
   label: {
-    marginTop: 10,
+    marginTop: 8,
     fontStyle: 'italic'
   },
   icon: {

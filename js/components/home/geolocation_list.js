@@ -1,51 +1,20 @@
 import React, { Component } from 'react';
 import { Text, List, ListItem } from 'native-base';
 
-function round(ts) {
-  return Math.round(ts * 100) / 100;
-}
+import { round } from './mathutils';
 
 export class GeolLocationFullList extends Component {
 
-  state = {
-    initialPosition : undefined,
-    lastPosition    : undefined,
-    positionArray   : []
-  };
-
-  watchID = null;
-
-  componentDidMount() {
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        let initialPosition = position;
-        this.setState({ initialPosition });
-      },
-      error => alert(JSON.stringify(error)),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-
-    this.watchID = navigator.geolocation.watchPosition((position) => {
-      let lastPosition = position;
-      this.setState({ lastPosition });
-      this.setState((prevState) => {
-        let arr = prevState.positionArray
-        arr.push(lastPosition);
-        return { positionArray : arr };
-      });
-
-    });
-  }
-
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
+  static propTypes = {
+    lastPosition : React.PropTypes.object,
+    positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
   }
 
   render() {
-    let initPos = this.state.initialPosition,
-        lastPos = this.state.lastPosition,
-        posArr  = this.state.positionArray;
+    const lastPos = this.props.lastPosition,
+          initPos = this.props.positionArray[0],
+          posArr  = this.props.positionArray;
+
     return (
       <List>
         <ListItem itemDivider>

@@ -22,8 +22,12 @@ const {
 
 class Home extends Component {
 
+  watchID = null;
+
   state = {
-    screen: 'home'
+    screen       : 'home',
+    lastPosition : undefined,
+    positionArray: []
   }
 
   static propTypes = {
@@ -38,12 +42,57 @@ class Home extends Component {
     }),
   }
 
-  pushRoute(route, index) {
-    this.props.setIndex(index);
-    this.props.pushRoute({ key: route, index: 1 }, this.props.navigation.key);
+  componentDidMount() {
+
+    this.watchID = navigator.geolocation.watchPosition(
+      (position => this.setPostionToState(position)),
+        (error) => alert(JSON.stringify(error)),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 100 }
+    );
+  }
+
+  componentWillUnmount() {
+      navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  setPostionToState(position) {
+    let lastPosition = position;
+    this.setState({ lastPosition });
+    this.setState((prevState) => {
+      let arr = prevState.positionArray
+      arr.push(lastPosition);
+      return { positionArray : arr };
+    });
+  }
+
+  switchScreenTo(name) {
+    this.setState({ screen: name });
   }
 
   render() {
+    let screen, title;
+    const mapBottomMenuState = {
+      home: false,
+      map : false,
+      list: false
+    }
+    switch(this.state.screen) {
+      case 'list':
+        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        mapBottomMenuState.list = true;
+        title = "My Log";
+        break;
+      case 'map':
+        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        mapBottomMenuState.map = true;
+        title = "Map";
+        break;
+      default:
+        screen = <GeoMainScreen lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
+        mapBottomMenuState.home = true;
+        title = "Home";
+    }
+
     return (
       <Container style={styles.container}>
         <Header>
@@ -52,40 +101,36 @@ class Home extends Component {
               <Icon active name="power" />
             </Button>
           </Left>
-
           <Body>
-            <Title>{(this.props.name) ? this.props.name : 'Home'}</Title>
+            <Title>
+                {(this.props.name) ? this.props.name : title}
+            </Title>
           </Body>
-
           <Right>
             <Button transparent onPress={this.props.openDrawer}>
               <Icon active name="menu" />
             </Button>
           </Right>
         </Header>
-
         <Content>
-          {/*<GeolLocationFullList />*/}
-          <GeoMainScreen/>
+          {screen}
         </Content>
-
         <Footer >
           <FooterTab>
-            <Button active={true} onPress={this.props.changeScreen}>
+            <Button active={mapBottomMenuState.home} onPress={() => this.switchScreenTo('home')}>
               <Icon name="apps" />
               <Text>Home</Text>
             </Button>
-            <Button>
-              <Icon name="list" onPress={this.props.changeScreen} />
+            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} >
+              <Icon name="list" />
               <Text>Log</Text>
             </Button>
-            <Button last>
+            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('list')} >
               <Icon active name="map" />
               <Text>Map</Text>
             </Button>
           </FooterTab>
         </Footer>
-
       </Container>
     );
   }
@@ -95,7 +140,6 @@ function bindAction(dispatch) {
   return {
     setIndex: index => dispatch(setIndex(index)),
     openDrawer: () => dispatch(openDrawer()),
-    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
     reset: key => dispatch(reset([{ key: 'login' }], key, 0)),
   };
 }
