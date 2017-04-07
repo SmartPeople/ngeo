@@ -25,6 +25,12 @@ class Home extends Component {
 
   watchID = null;
 
+  options = {
+    enableHighAccuracy: true,
+    timeout: 20000,
+    maximumAge: 100
+  };
+
   state = {
     screen       : 'home',
     lastPosition : undefined,
@@ -47,8 +53,8 @@ class Home extends Component {
 
     this.watchID = navigator.geolocation.watchPosition(
       (position => this.setPostionToState(position)),
-      (error) => alert(JSON.stringify(error)),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 100 }
+      (error) => this.addErrorToState(error),
+      this.options
     );
   }
 
