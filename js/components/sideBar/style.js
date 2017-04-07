@@ -1,8 +1,4 @@
 
-const React = require('react-native');
-
-const { StyleSheet } = React;
-
 export default {
   sidebar: {
     flex: 1,
