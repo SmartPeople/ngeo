@@ -18,10 +18,9 @@ function geoLine(p) {
 }
 
 function errorLine(p) {
+    const msg = p.message.split(100);
     return (
-        <Text>
-            {JSON.stringify(p)}
-        </Text>
+        <Text>{msg}...</Text>
     )
 }
 
@@ -41,7 +40,6 @@ export class GeolLocationFullList extends Component {
   }
 
   render() {
-    const posArr  = this.props.positionArray;
     return (
       <List
         dataArray = {this.props.positionArray}
