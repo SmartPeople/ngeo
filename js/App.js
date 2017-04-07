@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
+import styles from './styles';
 import CodePush from 'react-native-code-push';
 
 import { Container, Content, Text, View } from 'native-base';
@@ -10,21 +11,6 @@ import AppNavigator from './AppNavigator';
 import ProgressBar from './components/loaders/ProgressBar';
 
 import theme from './themes/base-theme';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: null,
-    height: null,
-  },
-  modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal1: {
-    height: 300,
-  },
-});
 
 class App extends Component {
 
@@ -74,35 +60,14 @@ class App extends Component {
               swipeToClose={false}
             >
               <View
-                style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', padding: 20 }}
+                style={styles.view}
               >
                 {this.state.showInstalling ?
-                  <Text
-                    style={{
-                      color: theme.brandPrimary,
-                      textAlign: 'center',
-                      marginBottom: 15,
-                      fontSize: 15,
-                    }}
-                  >
+                  <Text style={styles.view}>
                     Installing update...
                   </Text> :
-                  <View
-                    style={{
-                      flex: 1,
-                      alignSelf: 'stretch',
-                      justifyContent: 'center',
-                      padding: 20,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: theme.brandPrimary,
-                        textAlign: 'center',
-                        marginBottom: 15,
-                        fontSize: 15,
-                      }}
-                    >
+                  <View style={styles.view}>
+                    <Text style={styles.view}>
                       Downloading update... {`${parseInt(this.state.downloadProgress, 10)} %`}
                     </Text>
                     <ProgressBar

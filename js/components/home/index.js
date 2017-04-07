@@ -10,7 +10,9 @@ import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 import styles from './styles';
 
-import { GeolLocationFullList } from './geolocation_list.js';
+import { GeolLocationFullList } from './geolocation_list';
+import { GeoMainScreen } from './geomainscreen';
+
 
 const {
   reset,
@@ -19,6 +21,10 @@ const {
 
 
 class Home extends Component {
+
+  state = {
+    screen: 'home'
+  }
 
   static propTypes = {
     name: React.PropTypes.string,
@@ -48,7 +54,7 @@ class Home extends Component {
           </Left>
 
           <Body>
-            <Title>{(this.props.name) ? this.props.name : 'NGEO List'}</Title>
+            <Title>{(this.props.name) ? this.props.name : 'Home'}</Title>
           </Body>
 
           <Right>
@@ -59,20 +65,21 @@ class Home extends Component {
         </Header>
 
         <Content>
-          <GeolLocationFullList />
+          {/*<GeolLocationFullList />*/}
+          <GeoMainScreen/>
         </Content>
 
         <Footer >
           <FooterTab>
-            <Button active onPress={() => alert('home')}>
+            <Button active={true} onPress={this.props.changeScreen}>
               <Icon name="apps" />
               <Text>Home</Text>
             </Button>
             <Button>
-              <Icon name="list" onPress={() => alert('blankPage')} />
+              <Icon name="list" onPress={this.props.changeScreen} />
               <Text>Log</Text>
             </Button>
-            <Button>
+            <Button last>
               <Icon active name="map" />
               <Text>Map</Text>
             </Button>
@@ -94,8 +101,8 @@ function bindAction(dispatch) {
 }
 
 const mapStateToProps = state => ({
-  name: state.user.name,
-  list: state.list.list,
+  name  : state.user.name,
+  list  : state.list.list,
   navigation: state.cardNavigation,
 });
 
