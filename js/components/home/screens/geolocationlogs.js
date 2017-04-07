@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, List, ListItem } from 'native-base';
 
-import { round } from './mathutils';
+import { round } from '../mathutils';
 
 export class GeolLocationFullList extends Component {
 

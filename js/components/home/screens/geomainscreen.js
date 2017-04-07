@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Text, Icon } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import styles from './styles';
-
+import styles from '../styles';
+import { round } from '../mathutils';
 
 export class GeoMainScreen extends Component {
 
@@ -23,7 +23,7 @@ export class GeoMainScreen extends Component {
             <Text style={styles.label}> Longitude</Text>
             <Text style={styles.param}> { lastPos ? lastPos.coords.longitude : '' }&#176;</Text>
             <Text style={styles.label}> Altitude</Text>
-            <Text style={styles.param}> {lastPos ? lastPos.coords.altitude : '' } m ({lastPos ? lastPos.coords.altitudeAccuracy : '' }m) </Text>
+            <Text style={styles.param}> {lastPos ? round(lastPos.coords.altitude) : '' } m ({lastPos ? lastPos.coords.altitudeAccuracy : '' }m) </Text>
             <Text style={styles.label}> Accuracy:</Text>
             <Text style={styles.param}> { lastPos ? lastPos.coords.accuracy : '' } m</Text>
           </Col>
@@ -34,9 +34,9 @@ export class GeoMainScreen extends Component {
           </Col>
           <Col size={80}>
             <Text style={styles.label}> Speed:</Text>
-            <Text style={styles.param}> {lastPos ? lastPos.coords.speed : '' } m/s <Text style={styles.smallNote}>(GEO)</Text></Text>
-            <Text style={styles.param}> {lastPos ? lastPos.coords.speed : '' } m/s <Text style={styles.smallNote}>(AVG)</Text></Text>
-            <Text style={styles.param}> {lastPos ? lastPos.coords.speed : '' } m/s <Text style={styles.smallNote}>(LATEST)</Text></Text>
+            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(GEO)</Text></Text>
+            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(AVG)</Text></Text>
+            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(LATEST)</Text></Text>
           </Col>
         </Row>
         <Row style={styles.row}>
