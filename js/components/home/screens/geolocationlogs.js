@@ -1,7 +1,36 @@
 import React, { Component } from 'react';
 import { Text, List, ListItem } from 'native-base';
+import { POSITION_MSG } from '../index';
+import { round, extractLast4 } from '../mathutils';
 
-import { round } from '../mathutils';
+
+function geoLine(p) {
+    return (
+        <Text>
+            ..{extractLast4(p.timestamp)}&nbsp;
+            ..{extractLast4(p.coords.latitude)}&#176;&nbsp;
+            ..{extractLast4(p.coords.longitude)}&#176;&nbsp;
+            {round(p.coords.altitude)}m&nbsp;
+            {round(p.coords.accuracy)}m&nbsp;
+            {round(p.coords.speed)}m/s
+        </Text>
+    )
+}
+
+function errorLine(p) {
+    const msg = p.message.split(100);
+    return (
+        <Text>{msg}...</Text>
+    )
+}
+
+function line(p) {
+    return p.type === POSITION_MSG ? geoLine(p) : errorLine(p);
+}
+
+function AlertJson(p) {
+    alert(JSON.stringify(p, null, 2));
+}
 
 export class GeolLocationFullList extends Component {
 
@@ -11,44 +40,15 @@ export class GeolLocationFullList extends Component {
   }
 
   render() {
-    const lastPos = this.props.lastPosition,
-          initPos = this.props.positionArray[0],
-          posArr  = this.props.positionArray;
-
     return (
-      <List>
-        <ListItem itemDivider>
-          <Text>Initial Position</Text>
-        </ListItem>
-        <ListItem>
-          <Text>Timestamp: { initPos ? initPos.timestamp : '' }</Text>
-        </ListItem>
-        <ListItem>
-          <Text> Long:{ initPos ? round(initPos.coords.longitude) : '' }</Text>
-          <Text> Lat:{initPos ? round(initPos.coords.latitude) : '' } </Text>
-          <Text> Speed:{initPos ? initPos.coords.speed : '' } </Text>
-        </ListItem>
-        <ListItem itemDivider>
-          <Text>Last Position</Text>
-        </ListItem>
-        <ListItem>
-          <Text>Timestamp: { lastPos ? lastPos.timestamp : '' }</Text>
-        </ListItem>
-        <ListItem>
-          <Text> Long:{ lastPos ? round(lastPos.coords.longitude) : '' }</Text>
-          <Text> Lat:{lastPos ? round(lastPos.coords.latitude) : '' } </Text>
-          <Text> Speed:{lastPos ? lastPos.coords.speed : '' } </Text>
-        </ListItem>
-
-        {posArr.map((p) => {
-          return (
-            <ListItem key={p.timestamp}>
-              <Text>{p.timestamp} >></Text>
-              <Text>{round(p.coords.longitude)}, {round(p.coords.latitude)}, {p.coords.speed}</Text>
-            </ListItem>
-          );
-        })}
-      </List>
+      <List
+        dataArray = {this.props.positionArray}
+        renderRow = { (p) =>
+          <ListItem key={p.timestamp} button onPress={() => { AlertJson(p) }}>
+            {line(p)}
+          </ListItem>
+        }
+      ></List>
     );
   }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, Icon } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { POSITION_MSG } from '../index';
 import styles from '../styles';
 import { round } from '../mathutils';
 

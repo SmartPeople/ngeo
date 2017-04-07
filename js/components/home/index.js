@@ -13,16 +13,23 @@ import styles from './styles';
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 
+export const POSITION_MSG = 0;
+export const ERROR_MSG    = 1;
 
 const {
-  reset,
-  pushRoute,
+  reset
 } = actions;
 
 
 class Home extends Component {
 
   watchID = null;
+
+  options = {
+    enableHighAccuracy: true,
+    timeout: 20000,
+    maximumAge: 100
+  };
 
   state = {
     screen       : 'home',
@@ -46,8 +53,8 @@ class Home extends Component {
 
     this.watchID = navigator.geolocation.watchPosition(
       (position => this.setPostionToState(position)),
-        (error) => alert(JSON.stringify(error)),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 100 }
+      (error) => this.addErrorToState(error),
+      this.options
     );
   }
 
@@ -55,8 +62,19 @@ class Home extends Component {
       navigator.geolocation.clearWatch(this.watchID);
   }
 
+  addErrorToState(error) {
+    let err  = error;
+    err.type = ERROR_MSG;
+    this.setState((prevState) => {
+        let arr = prevState.positionArray
+        arr.push(err);
+        return { positionArray : arr };
+    });
+  }
+
   setPostionToState(position) {
     let lastPosition = position;
+    lastPosition.type = POSITION_MSG;
     this.setState({ lastPosition });
     this.setState((prevState) => {
       let arr = prevState.positionArray
