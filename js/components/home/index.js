@@ -9,6 +9,9 @@ import { Footer, FooterTab } from 'native-base';
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 import styles from './styles';
+import Dimensions from 'Dimensions';
+
+import MapView from 'react-native-maps';
 
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
@@ -20,6 +23,21 @@ const {
   reset
 } = actions;
 
+import { StyleSheet } from 'react-native';
+
+const stylesMap = StyleSheet.create({
+    container: {
+        // ...StyleSheet.absoluteFillObject,
+        // height: 400,
+        // width: 400,
+        // justifyContent: 'flex-end',
+        // alignItems: 'center',
+    },
+    map: {
+        height: 400,
+        width: 400,
+    },
+});
 
 class Home extends Component {
 
@@ -101,7 +119,17 @@ class Home extends Component {
         title = "My Log";
         break;
       case 'map':
-        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        screen = <MapView
+            style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width}}
+            region={{
+                latitude: this.state.lastPosition.coords.latitude,
+                longitude: this.state.lastPosition.coords.longitude,
+                // latitude: 37.78825,
+                // longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }}
+        />
         mapBottomMenuState.map = true;
         title = "Map";
         break;
@@ -143,7 +171,7 @@ class Home extends Component {
               <Icon name="list" />
               <Text>Log</Text>
             </Button>
-            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('list')} >
+            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('map')} >
               <Icon active name="map" />
               <Text>Map</Text>
             </Button>
