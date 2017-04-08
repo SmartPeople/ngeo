@@ -12,6 +12,7 @@ import styles from './styles';
 
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
+import { GeoMap } from './screens/geomap';
 
 export const POSITION_MSG = 0;
 export const ERROR_MSG    = 1;
@@ -78,7 +79,9 @@ class Home extends Component {
     this.setState({ lastPosition });
     this.setState((prevState) => {
       let arr = prevState.positionArray
-      arr.push(lastPosition);
+      if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
+          arr.push(lastPosition);
+      }
       return { positionArray : arr };
     });
   }
@@ -101,7 +104,7 @@ class Home extends Component {
         title = "My Log";
         break;
       case 'map':
-        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        screen = <GeoMap lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
         mapBottomMenuState.map = true;
         title = "Map";
         break;
@@ -143,7 +146,7 @@ class Home extends Component {
               <Icon name="list" />
               <Text>Log</Text>
             </Button>
-            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('list')} >
+            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('map')} >
               <Icon active name="map" />
               <Text>Map</Text>
             </Button>
