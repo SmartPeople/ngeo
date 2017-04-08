@@ -79,7 +79,9 @@ class Home extends Component {
     this.setState({ lastPosition });
     this.setState((prevState) => {
       let arr = prevState.positionArray
-      arr.push(lastPosition);
+      if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
+          arr.push(lastPosition);
+      }
       return { positionArray : arr };
     });
   }
