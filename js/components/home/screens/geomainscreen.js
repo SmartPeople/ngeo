@@ -23,9 +23,9 @@ export class GeoMainScreen extends Component {
             <Text style={styles.label}> Longitude</Text>
             <Text style={styles.param}> { lastPos ? lastPos.coords.longitude : '' }&#176;</Text>
             <Text style={styles.label}> Altitude</Text>
-            <Text style={styles.param}> {lastPos ? round(lastPos.coords.altitude) : '' } m ({lastPos ? lastPos.coords.altitudeAccuracy : '' }m) </Text>
+            <Text style={styles.param}> {lastPos ? round(lastPos.coords.altitude) : '' } m ({lastPos ? round(lastPos.coords.altitudeAccuracy) : '' }m) </Text>
             <Text style={styles.label}> Accuracy:</Text>
-            <Text style={styles.param}> { lastPos ? lastPos.coords.accuracy : '' } m</Text>
+            <Text style={styles.param}> { lastPos ? round(lastPos.coords.accuracy) : '' } m</Text>
           </Col>
         </Row>
         <Row style={styles.row}>

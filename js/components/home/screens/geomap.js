@@ -13,9 +13,16 @@ export class GeoMap extends Component {
     }
 
     render() {
-        const lastPos = this.props.lastPosition,
-               posArr = this.props.positionArray.filter((p) => p.type === POSITION_MSG);
-
+        let lastPos = this.props.lastPosition;
+        const posArr = this.props.positionArray.filter((p) => p.type === POSITION_MSG);
+        if(!lastPos) {
+            lastPos = {
+                coords : {
+                    latitude: -34.397,
+                    longitude : 150.644
+                }
+            }
+        }
         return (
             <MapView
                 style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width}}
