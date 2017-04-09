@@ -15,6 +15,7 @@
     "native-base": "2.0.12",
     "react": "15.4.2",
     "react-native": "0.41.2",
+    "react-native-background-geolocation": "^2.7.0",
     "react-native-code-push": "1.17.0-beta",
     "react-native-easy-grid": "0.1.8",
     "react-native-maps": "^0.13.0",

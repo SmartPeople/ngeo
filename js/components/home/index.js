@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
 import { Footer, FooterTab } from 'native-base';
+import BackgroundGeolocation from "react-native-background-geolocation";
 
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
@@ -50,17 +51,76 @@ class Home extends Component {
     }),
   }
 
+    onError(error) {
+        alert(JSON.stringify(error));
+        var type = error.type;
+        var code = error.code;
+        alert(type + " Error: " + code);
+    }
+    onActivityChange(activityName) {
+        console.log('- Current motion activity: ', activityName);  // eg: 'on_foot', 'still', 'in_vehicle'
+    }
+    onProviderChange(provider) {
+        console.log('- Location provider changed: ', provider.enabled);
+    }
+    onMotionChange(location) {
+        console.log('- [js]motionchanged: ', JSON.stringify(location));
+    }
+
+
+  lPos  = (location) => this.setPostionToState(location)
+
+  lError = (error) => this.addErrorToState(error)
+
   componentDidMount() {
 
-    this.watchID = navigator.geolocation.watchPosition(
-      (position => this.setPostionToState(position)),
-      (error) => this.addErrorToState(error),
-      this.options
-    );
+    // this.watchID = navigator.geolocation.watchPosition(
+    //   (position => this.setPostionToState(position)),
+    //   (error) => this.addErrorToState(error),
+    //   this.options
+    // );
+
+    BackgroundGeolocation.on('location', this.lPos);
+
+    BackgroundGeolocation.on('error', this.lError);
+
+    // BackgroundGeolocation.on('motionchange', this.onMotionChange);
+    //
+    // BackgroundGeolocation.on('activitychange', this.onActivityChange);
+    //
+    // BackgroundGeolocation.on('providerchange', this.onProviderChange);
+
+    BackgroundGeolocation.configure({
+      desiredAccuracy: 0,
+      stationaryRadius: 25,
+      distanceFilter: 10,
+      stopTimeout: 1,
+      debug: true,
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      stopOnTerminate: true,
+      startOnBoot: false,
+      },
+      (state) => {
+        // alert(JSON.stringify(state));
+        console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
+
+        if (!state.enabled) {
+          BackgroundGeolocation.start(function() {
+            console.log("- Start success");
+          });
+        }
+    });
+
   }
 
   componentWillUnmount() {
-      navigator.geolocation.clearWatch(this.watchID);
+      // navigator.geolocation.clearWatch(this.watchID);
+
+      BackgroundGeolocation.un('location', this.lPos);
+      BackgroundGeolocation.un('error', this.lError);
+      // BackgroundGeolocation.un('motionchange', this.onMotionChange);
+      // BackgroundGeolocation.un('activitychange', this.onActivityChange);
+      // BackgroundGeolocation.un('providerchange', this.onProviderChange);
   }
 
   addErrorToState(error) {

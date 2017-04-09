@@ -30,6 +30,11 @@
       <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyAw20OjoqQTQ4vjb0HdPLOMsNwS1W9vGWc"/>
+
+      <!-- react-native-background-geolocation licence -->
+      <meta-data
+        android:name="com.transistorsoft.locationmanager.license"
+        android:value="YOUR_LICENCE_KEY_HERE" />
     </application>
 
 </manifest>

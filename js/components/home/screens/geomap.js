@@ -15,6 +15,8 @@ export class GeoMap extends Component {
     render() {
         let lastPos = this.props.lastPosition;
         const posArr = this.props.positionArray.filter((p) => p.type === POSITION_MSG);
+        alert(lastPos);
+        alert(posArr);
         if(!lastPos) {
             lastPos = {
                 coords : {
