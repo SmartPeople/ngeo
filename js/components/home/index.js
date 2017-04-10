@@ -9,6 +9,7 @@ import BackgroundGeolocation from "react-native-background-geolocation";
 
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
+
 import styles from './styles';
 
 import { GeolLocationFullList } from './screens/geolocationlogs';
@@ -17,6 +18,15 @@ import { GeoMap } from './screens/geomap';
 
 export const POSITION_MSG = 0;
 export const ERROR_MSG    = 1;
+
+export const EVENT_TYPE = {
+    "POSITION_MSG"      : 0,
+    "ERROR_MSG"         : 1,
+    "MOTION_CHANGE_MSG" : 2,
+    "ACTIVITY_CHANGE"   : 3,
+    "PROVIDER_CHANGE"   : 4,
+    "START"             : 5
+};
 
 const {
   reset
@@ -51,44 +61,25 @@ class Home extends Component {
     }),
   }
 
-    onError(error) {
-        alert(JSON.stringify(error));
-        var type = error.type;
-        var code = error.code;
-        alert(type + " Error: " + code);
-    }
-    onActivityChange(activityName) {
-        console.log('- Current motion activity: ', activityName);  // eg: 'on_foot', 'still', 'in_vehicle'
-    }
-    onProviderChange(provider) {
-        console.log('- Location provider changed: ', provider.enabled);
-    }
-    onMotionChange(location) {
-        console.log('- [js]motionchanged: ', JSON.stringify(location));
-    }
 
+  lPos            = (location) => this.setPostionToState(location)
 
-  lPos  = (location) => this.setPostionToState(location)
+  lError          = (error) => this.addMsgToState(error, EVENT_TYPE.ERROR_MSG)
 
-  lError = (error) => this.addErrorToState(error)
+  lMotionChange   = (msg) => this.addMsgToState(msg, EVENT_TYPE.MOTION_CHANGE_MSG)
+
+  lActivityChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.ACTIVITY_CHANGE)
+
+  lProviderChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.PROVIDER_CHANGE)
+
+  lStart          = (msg) => this.addMsgToState(msg, EVENT_TYPE.START)
 
   componentDidMount() {
-
-    // this.watchID = navigator.geolocation.watchPosition(
-    //   (position => this.setPostionToState(position)),
-    //   (error) => this.addErrorToState(error),
-    //   this.options
-    // );
-
     BackgroundGeolocation.on('location', this.lPos);
-
     BackgroundGeolocation.on('error', this.lError);
-
-    // BackgroundGeolocation.on('motionchange', this.onMotionChange);
-    //
-    // BackgroundGeolocation.on('activitychange', this.onActivityChange);
-    //
-    // BackgroundGeolocation.on('providerchange', this.onProviderChange);
+    BackgroundGeolocation.on('motionchange', this.lMotionChange);
+    BackgroundGeolocation.on('activitychange', this.lActivityChange);
+    BackgroundGeolocation.on('providerchange', this.lProviderChange);
 
     BackgroundGeolocation.configure({
       desiredAccuracy: 0,
@@ -100,47 +91,37 @@ class Home extends Component {
       stopOnTerminate: true,
       startOnBoot: false,
       },
-      (state) => {
-        // alert(JSON.stringify(state));
-        console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
-
-        if (!state.enabled) {
-          BackgroundGeolocation.start(function() {
-            console.log("- Start success");
-          });
-        }
-    });
+      (state) => this.lStart
+    );
 
   }
 
   componentWillUnmount() {
-      // navigator.geolocation.clearWatch(this.watchID);
-
-      BackgroundGeolocation.un('location', this.lPos);
-      BackgroundGeolocation.un('error', this.lError);
-      // BackgroundGeolocation.un('motionchange', this.onMotionChange);
-      // BackgroundGeolocation.un('activitychange', this.onActivityChange);
-      // BackgroundGeolocation.un('providerchange', this.onProviderChange);
+    BackgroundGeolocation.un('location', this.lPos);
+    BackgroundGeolocation.un('error', this.lError);
+    BackgroundGeolocation.un('motionchange', this.lMotionChange);
+    BackgroundGeolocation.un('activitychange', this.lActivityChange);
+    BackgroundGeolocation.un('providerchange', this.lProviderChange);
   }
 
-  addErrorToState(error) {
-    let err  = error;
-    err.type = ERROR_MSG;
+  addMsgToState(message, type) {
+    let msg      = message;
+        msg.type = type;
     this.setState((prevState) => {
-        let arr = prevState.positionArray
-        arr.push(err);
-        return { positionArray : arr };
+      let arr = prevState.positionArray;
+      arr.push(msg);
+      return { positionArray : arr };
     });
   }
 
   setPostionToState(position) {
     let lastPosition = position;
-    lastPosition.type = POSITION_MSG;
+    lastPosition.type = EVENT_TYPE.POSITION_MSG;
     this.setState({ lastPosition });
     this.setState((prevState) => {
-      let arr = prevState.positionArray
+      let arr = prevState.positionArray;
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
-          arr.push(lastPosition);
+        arr.push(lastPosition);
       }
       return { positionArray : arr };
     });

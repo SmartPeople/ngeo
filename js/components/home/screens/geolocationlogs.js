@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, List, ListItem } from 'native-base';
-import { POSITION_MSG } from '../index';
+import { EVENT_TYPE } from '../index';
 import { round, extractLast4 } from '../mathutils';
 
 
@@ -18,18 +18,18 @@ function geoLine(p) {
 }
 
 function errorLine(p) {
-  const msg = p.message.split(100);
+  const msg = (p.message ? p.message : JSON.stringify(p)).slice(0, 40);
   return (
     <Text>{msg}...</Text>
   )
 }
 
 function line(p) {
-  return p.type === POSITION_MSG ? geoLine(p) : errorLine(p);
+  return p.type === EVENT_TYPE.POSITION_MSG ? geoLine(p) : errorLine(p);
 }
 
 function AlertJson(p) {
-    alert(JSON.stringify(p, null, 2));
+  alert(JSON.stringify(p, null, 2));
 }
 
 export class GeolLocationFullList extends Component {
