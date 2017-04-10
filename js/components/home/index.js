@@ -63,7 +63,7 @@ class Home extends Component {
 
   lMotionChange   = (msg) => this.addMsgToState(msg, EVENT_TYPE.MOTION_CHANGE_MSG)
 
-  lActivityChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.ACTIVITY_CHANGE)
+  lActivityChange = (msg) => this.addMsgToState({message: 'activity change:'+msg}, EVENT_TYPE.ACTIVITY_CHANGE)
 
   lProviderChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.PROVIDER_CHANGE)
 
