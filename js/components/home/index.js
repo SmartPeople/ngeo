@@ -16,9 +16,6 @@ import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
 
-export const POSITION_MSG = 0;
-export const ERROR_MSG    = 1;
-
 export const EVENT_TYPE = {
     "POSITION_MSG"      : 0,
     "ERROR_MSG"         : 1,
@@ -34,8 +31,6 @@ const {
 
 
 class Home extends Component {
-
-  watchID = null;
 
   options = {
     enableHighAccuracy: true,
