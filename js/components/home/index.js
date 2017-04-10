@@ -72,7 +72,14 @@ class Home extends Component {
 
   lProviderChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.PROVIDER_CHANGE)
 
-  lStart          = (msg) => this.addMsgToState(msg, EVENT_TYPE.START)
+  lStart          = (msg) => {
+    if (!state.enabled) {
+      BackgroundGeolocation.start(function () {
+        console.log("- Start success");
+      });
+    }
+    this.addMsgToState(msg, EVENT_TYPE.START)
+  }
 
   componentDidMount() {
     BackgroundGeolocation.on('location', this.lPos);
