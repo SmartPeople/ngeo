@@ -8,5 +8,9 @@ export function extractLast(num, n) {
 }
 
 export function extractLast4(num) {
-    return extractLast(num, -4);
+  return extractLast(num, -4);
+}
+
+export function msToKmph(speed) {
+  return speed * 3.6;
 }
