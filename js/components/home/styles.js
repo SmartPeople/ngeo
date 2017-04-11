@@ -4,7 +4,7 @@ export default {
   },
   row: {
     flex: 1,
-    marginTop: 16
+    marginTop: 22
   },
   text: {
     fontSize: 20,
@@ -24,6 +24,10 @@ export default {
   },
   param:{
     fontSize: 22,
+    color: '#0080ff'
+  },
+  uuid: {
+    fontSize: 12,
     color: '#0080ff'
   },
   smallNote: {

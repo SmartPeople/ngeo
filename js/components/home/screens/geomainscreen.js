@@ -58,9 +58,9 @@ export class GeoMainScreen extends Component {
           </Col>
           <Col size={80}>
             <Text style={styles.label}> DateTime:</Text>
-              <Text style={styles.param}> { lastPos ? new Date(lastPos.timestamp).toISOString() : '' }</Text>
-            <Text style={styles.label}> Timestamp:</Text>
-            <Text style={styles.param}> { lastPos ? lastPos.timestamp : '' }</Text>
+              <Text style={styles.param}> { lastPos ? lastPos.timestamp : '' }</Text>
+            <Text style={styles.label}> UUID:</Text>
+            <Text style={styles.uuid}> { lastPos ? lastPos.uuid : '' }</Text>
           </Col>
         </Row>
       </Grid>
