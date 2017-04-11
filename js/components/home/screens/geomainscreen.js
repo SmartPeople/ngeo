@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Icon } from 'native-base';
+import { Text, Icon, Button } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styles from '../styles';
 import { round } from '../mathutils';
@@ -9,6 +9,19 @@ export class GeoMainScreen extends Component {
   static propTypes = {
     lastPosition : React.PropTypes.object,
     positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
+  }
+
+  state = {
+    isKmph: false
+  }
+
+  getSpeed(speed) {
+    const relSpeed = round((this.state.isKmph ? speed * 3.6 : speed));
+    return relSpeed + ' ' + (this.state.isKmph ? 'km/h' : 'm/s');
+  }
+
+  toggleSpeedType() {
+    this.setState({isKmph: !this.state.isKmph});
   }
 
   render() {
@@ -33,10 +46,10 @@ export class GeoMainScreen extends Component {
             <Icon active name="speedometer" style={styles.icon} />
           </Col>
           <Col size={80}>
-            <Text style={styles.label}> Speed:</Text>
-            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(GEO)</Text></Text>
-            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(AVG)</Text></Text>
-            <Text style={styles.param}> {lastPos ? round(lastPos.coords.speed) : '' } m/s <Text style={styles.smallNote}>(LATEST)</Text></Text>
+            <Text style={styles.label} onPress={() => this.toggleSpeedType()}> Speed:</Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(GEO)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(AVG)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(LATEST)</Text></Text>
           </Col>
         </Row>
         <Row style={styles.row}>
@@ -45,9 +58,9 @@ export class GeoMainScreen extends Component {
           </Col>
           <Col size={80}>
             <Text style={styles.label}> DateTime:</Text>
-              <Text style={styles.param}> { lastPos ? new Date(lastPos.timestamp).toISOString() : '' }</Text>
-            <Text style={styles.label}> Timestamp:</Text>
-            <Text style={styles.param}> { lastPos ? lastPos.timestamp : '' }</Text>
+              <Text style={styles.param}> { lastPos ? lastPos.timestamp : '' }</Text>
+            <Text style={styles.label}> UUID:</Text>
+            <Text style={styles.uuid}> { lastPos ? lastPos.uuid : '' }</Text>
           </Col>
         </Row>
       </Grid>
