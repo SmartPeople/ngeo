@@ -90,11 +90,19 @@ class Home extends Component {
       stopTimeout: 1,
       debug: true,
       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: true,
+      stopOnTerminate: false,
       startOnBoot: false,
-      },
-      (state) => this.lStart
-    );
+      preventSuspend : true,
+      heartbeatInterval: 10
+      }, function(state) {
+        console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
+
+        if (!state.enabled) {
+          BackgroundGeolocation.start(function() {
+            console.log("- Start success");
+          });
+        }
+    });
 
   }
 
