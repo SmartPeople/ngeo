@@ -16,6 +16,7 @@ import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
 
+
 export const EVENT_TYPE = {
     "POSITION_MSG"      : 0,
     "ERROR_MSG"         : 1,

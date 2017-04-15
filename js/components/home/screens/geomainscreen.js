@@ -63,6 +63,9 @@ export class GeoMainScreen extends Component {
             <Text style={styles.uuid}> { lastPos ? lastPos.uuid : '' }</Text>
           </Col>
         </Row>
+        <Row style={styles.row}>
+          <Button onPress={() => alert('Hi!') }><Text>Start</Text></Button>
+        </Row>
       </Grid>
     );
   }
