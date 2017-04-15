@@ -4,7 +4,7 @@ export default {
   },
   row: {
     flex: 1,
-    marginTop: 22
+    marginTop: 20
   },
   text: {
     fontSize: 20,
@@ -33,5 +33,12 @@ export default {
   smallNote: {
     fontSize: 10,
     color: '#808080'
+  },
+  footerBadge: {
+    backgroundColor: '#8C97B5'
+  },
+  trackingButton: {
+    marginLeft :10, 
+    marginRight: 10
   }
 };

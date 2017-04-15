@@ -1,5 +1,8 @@
+import { Alert } from 'react-native';
+import BackgroundGeolocation from "react-native-background-geolocation";
+
 import React, { Component } from 'react';
-import { Text, Icon, Button } from 'native-base';
+import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styles from '../styles';
 import { round } from '../mathutils';
@@ -7,12 +10,15 @@ import { round } from '../mathutils';
 export class GeoMainScreen extends Component {
 
   static propTypes = {
-    lastPosition : React.PropTypes.object,
-    positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
+    lastPosition  : React.PropTypes.object,
+    positionArray : React.PropTypes.arrayOf(React.PropTypes.object),
+    isTracking    : React.PropTypes.bool,
+    startTracking : React.PropTypes.func,
+    stopTracking  : React.PropTypes.func
   }
 
   state = {
-    isKmph: false
+    isKmph : false
   }
 
   getSpeed(speed) {
@@ -22,6 +28,32 @@ export class GeoMainScreen extends Component {
 
   toggleSpeedType() {
     this.setState({isKmph: !this.state.isKmph});
+  }
+  
+  startTracking() {
+    this.props.startTracking();
+    BackgroundGeolocation.start(() => console.log("- Start success"));
+  }
+
+  stopTracking() {
+    Alert.alert(
+      'Tracking',
+      'Are you sure?',
+      [
+        {
+          text: 'OK', 
+          onPress: () => {
+            BackgroundGeolocation.stop(() => console.log("- Stop success"));
+            this.props.stopTracking();
+          }
+        },
+        {
+          text: 'Cancel', 
+          onPress: () => console.log('Cancel Pressed'), 
+          style: 'cancel'
+        }
+      ]
+    );
   }
 
   render() {
@@ -61,6 +93,19 @@ export class GeoMainScreen extends Component {
               <Text style={styles.param}> { lastPos ? lastPos.timestamp : '' }</Text>
             <Text style={styles.label}> UUID:</Text>
             <Text style={styles.uuid}> { lastPos ? lastPos.uuid : '' }</Text>
+          </Col>
+        </Row>
+        <Row style={styles.row}>
+          <Col size={100}>
+          {this.props.isTracking ? (
+            <Button onPress={() => this.stopTracking() } block danger bordered style={styles.trackingButton} badge>
+              <Text>Stop Tracking</Text>
+            </Button>
+          ) : (
+            <Button onPress={() => this.startTracking() } block success bordered style={styles.trackingButton}>
+              <Text>Start Tracking</Text>
+            </Button>
+          )}
           </Col>
         </Row>
       </Grid>

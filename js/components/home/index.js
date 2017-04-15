@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
-import { Footer, FooterTab } from 'native-base';
+import { Footer, FooterTab, Badge } from 'native-base';
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 import { openDrawer } from '../../actions/drawer';
@@ -15,6 +15,9 @@ import styles from './styles';
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
+import uuidV4 from 'uuid/v4';
+// const uuidV4 = require('uuid/v4')
+
 
 export const EVENT_TYPE = {
     "POSITION_MSG"      : 0,
@@ -32,16 +35,12 @@ const {
 
 class Home extends Component {
 
-  options = {
-    enableHighAccuracy: true,
-    timeout: 20000,
-    maximumAge: 100
-  };
-
   state = {
     screen       : 'home',
     lastPosition : undefined,
-    positionArray: []
+    positionArray: [],
+    isTracking   : false,
+    uuidTracking : null
   }
 
   static propTypes = {
@@ -90,18 +89,12 @@ class Home extends Component {
       stopTimeout: 1,
       debug: true,
       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: false,
+      stopOnTerminate: true,
       startOnBoot: false,
       preventSuspend : true,
       heartbeatInterval: 10
       }, function(state) {
         console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
-
-        if (!state.enabled) {
-          BackgroundGeolocation.start(function() {
-            console.log("- Start success");
-          });
-        }
     });
 
   }
@@ -118,8 +111,9 @@ class Home extends Component {
     let msg      = message;
         msg.type = type;
     this.setState((prevState) => {
+      msg.uuidV4Tracking = prevState.uuidTracking;
       let arr = prevState.positionArray;
-      arr.push(msg);
+      arr.unshift(msg);
       return { positionArray : arr };
     });
   }
@@ -129,9 +123,10 @@ class Home extends Component {
     lastPosition.type = EVENT_TYPE.POSITION_MSG;
     this.setState({ lastPosition });
     this.setState((prevState) => {
+      lastPosition.uuidV4Tracking = prevState.uuidTracking;
       let arr = prevState.positionArray;
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
-        arr.push(lastPosition);
+        arr.unshift(lastPosition);
       }
       return { positionArray : arr };
     });
@@ -150,17 +145,32 @@ class Home extends Component {
     }
     switch(this.state.screen) {
       case 'list':
-        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        screen = (
+          <GeolLocationFullList 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} />
+        );
         mapBottomMenuState.list = true;
         title = "My Log";
         break;
       case 'map':
-        screen = <GeoMap lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
+        screen = (
+          <GeoMap 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} />
+        );
         mapBottomMenuState.map = true;
         title = "Map";
         break;
       default:
-        screen = <GeoMainScreen lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
+        screen = (
+          <GeoMainScreen 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} 
+            isTracking    = {this.state.isTracking} 
+            startTracking = {() => this.setState({isTracking: true, uuidTracking: uuidV4()})}
+            stopTracking  = {() => this.setState({positionArray: [], isTracking: false, uuidTracking: null})} />
+        );
         mapBottomMenuState.home = true;
         title = "Home";
     }
@@ -175,7 +185,7 @@ class Home extends Component {
           </Left>
           <Body>
             <Title>
-                {(this.props.name) ? this.props.name : title}
+              {title}
             </Title>
           </Body>
           <Right>
@@ -193,7 +203,10 @@ class Home extends Component {
               <Icon name="apps" />
               <Text>Home</Text>
             </Button>
-            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} >
+            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
+              <Badge style={styles.footerBadge}>
+                <Text>{this.state.positionArray.length}</Text>
+              </Badge>
               <Icon name="list" />
               <Text>Log</Text>
             </Button>
