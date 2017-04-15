@@ -14,6 +14,7 @@ const {
 class BlankPage extends Component {
 
   static propTypes = {
+    title: React.PropTypes.string,
     name: React.PropTypes.string,
     index: React.PropTypes.number,
     list: React.PropTypes.arrayOf(React.PropTypes.string),
@@ -30,7 +31,6 @@ class BlankPage extends Component {
 
   render() {
     const { props: { name, index, list } } = this;
-
     return (
       <Container style={styles.container}>
         <Header>
@@ -41,7 +41,7 @@ class BlankPage extends Component {
           </Left>
 
           <Body>
-            <Title>{(name) ? this.props.name : 'Blank Page'}</Title>
+            <Title>{(this.props.title) ? this.props.title : 'Blank Page'}</Title>
           </Body>
 
           <Right>

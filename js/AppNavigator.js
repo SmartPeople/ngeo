@@ -81,6 +81,8 @@ class AppNavigator extends Component {
         return <Home />;
       case 'blankPage':
         return <BlankPage />;
+      case 'creditsPage':
+        return <BlankPage title={"Credits"}/>;
       default :
         return <Login />;
     }

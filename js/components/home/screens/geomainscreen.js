@@ -43,8 +43,8 @@ export class GeoMainScreen extends Component {
         {
           text: 'OK', 
           onPress: () => {
-            this.props.stopTracking();
             BackgroundGeolocation.stop(() => console.log("- Stop success"));
+            this.props.stopTracking();
           }
         },
         {

@@ -15,6 +15,8 @@ import styles from './styles';
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
+import uuidV4 from 'uuid/v4';
+// const uuidV4 = require('uuid/v4')
 
 
 export const EVENT_TYPE = {
@@ -33,17 +35,12 @@ const {
 
 class Home extends Component {
 
-  options = {
-    enableHighAccuracy: true,
-    timeout: 20000,
-    maximumAge: 100
-  };
-
   state = {
     screen       : 'home',
     lastPosition : undefined,
     positionArray: [],
-    isTracking   : false
+    isTracking   : false,
+    uuidTracking : null
   }
 
   static propTypes = {
@@ -114,6 +111,7 @@ class Home extends Component {
     let msg      = message;
         msg.type = type;
     this.setState((prevState) => {
+      msg.uuidV4Tracking = prevState.uuidTracking;
       let arr = prevState.positionArray;
       arr.unshift(msg);
       return { positionArray : arr };
@@ -125,6 +123,7 @@ class Home extends Component {
     lastPosition.type = EVENT_TYPE.POSITION_MSG;
     this.setState({ lastPosition });
     this.setState((prevState) => {
+      lastPosition.uuidV4Tracking = prevState.uuidTracking;
       let arr = prevState.positionArray;
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
         arr.unshift(lastPosition);
@@ -169,8 +168,8 @@ class Home extends Component {
             lastPosition  = {this.state.lastPosition} 
             positionArray = {this.state.positionArray} 
             isTracking    = {this.state.isTracking} 
-            startTracking = {() => this.setState({isTracking: true})}
-            stopTracking  = {() => this.setState({positionArray: [], isTracking: false})} />
+            startTracking = {() => this.setState({isTracking: true, uuidTracking: uuidV4()})}
+            stopTracking  = {() => this.setState({positionArray: [], isTracking: false, uuidTracking: null})} />
         );
         mapBottomMenuState.home = true;
         title = "Home";
@@ -186,7 +185,7 @@ class Home extends Component {
           </Left>
           <Body>
             <Title>
-                {(this.props.name) ? this.props.name : title}
+              {title}
             </Title>
           </Body>
           <Right>
