@@ -1,4 +1,6 @@
 import { Alert } from 'react-native';
+import BackgroundGeolocation from "react-native-background-geolocation";
+
 import React, { Component } from 'react';
 import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -8,14 +10,15 @@ import { round } from '../mathutils';
 export class GeoMainScreen extends Component {
 
   static propTypes = {
-    lastPosition : React.PropTypes.object,
-    positionArray: React.PropTypes.arrayOf(React.PropTypes.object),
-    clearPositionArray: React.PropTypes.func
+    lastPosition      : React.PropTypes.object,
+    positionArray     : React.PropTypes.arrayOf(React.PropTypes.object),
+    isTracking        : React.PropTypes.bool,
+    startTracking     : React.PropTypes.func,
+    stopTracking      : React.PropTypes.func
   }
 
   state = {
-    isKmph    : false,
-    isTracking: false
+    isKmph    : false
   }
 
   getSpeed(speed) {
@@ -28,7 +31,8 @@ export class GeoMainScreen extends Component {
   }
   
   startTracking() {
-    this.setState({isTracking: true});
+    this.props.startTracking();
+    BackgroundGeolocation.start(() => console.log("- Start success"));
   }
 
   stopTracking() {
@@ -39,7 +43,8 @@ export class GeoMainScreen extends Component {
         {
           text: 'OK', 
           onPress: () => {
-            this.setState({isTracking: false});
+            this.props.stopTracking();
+            BackgroundGeolocation.stop(() => console.log("- Stop success"));
           }
         },
         {
@@ -92,7 +97,7 @@ export class GeoMainScreen extends Component {
         </Row>
         <Row style={styles.row}>
           <Col size={100}>
-          {this.state.isTracking ? (
+          {this.props.isTracking ? (
             <Button onPress={() => this.stopTracking() } block danger bordered style={styles.trackingButton} badge>
               <Text>Stop Tracking</Text>
             </Button>

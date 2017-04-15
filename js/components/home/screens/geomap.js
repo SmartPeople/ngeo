@@ -12,7 +12,7 @@ export class GeoMap extends Component {
   }
 
   render() {
-    let lastPos = this.props.lastPosition;
+    let lastPos  = this.props.lastPosition;
     const posArr = this.props.positionArray.filter((p) => p.type === EVENT_TYPE.POSITION_MSG);
     if(!lastPos) {
       lastPos = {

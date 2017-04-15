@@ -42,7 +42,8 @@ class Home extends Component {
   state = {
     screen       : 'home',
     lastPosition : undefined,
-    positionArray: []
+    positionArray: [],
+    isTracking   : false
   }
 
   static propTypes = {
@@ -91,18 +92,12 @@ class Home extends Component {
       stopTimeout: 1,
       debug: true,
       logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: false,
+      stopOnTerminate: true,
       startOnBoot: false,
       preventSuspend : true,
       heartbeatInterval: 10
       }, function(state) {
         console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
-
-        if (!state.enabled) {
-          BackgroundGeolocation.start(function() {
-            console.log("- Start success");
-          });
-        }
     });
 
   }
@@ -151,17 +146,32 @@ class Home extends Component {
     }
     switch(this.state.screen) {
       case 'list':
-        screen = <GeolLocationFullList lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />;
+        screen = (
+          <GeolLocationFullList 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} />
+        );
         mapBottomMenuState.list = true;
         title = "My Log";
         break;
       case 'map':
-        screen = <GeoMap lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
+        screen = (
+          <GeoMap 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} />
+        );
         mapBottomMenuState.map = true;
         title = "Map";
         break;
       default:
-        screen = <GeoMainScreen lastPosition={this.state.lastPosition} positionArray={this.state.positionArray} />
+        screen = (
+          <GeoMainScreen 
+            lastPosition  = {this.state.lastPosition} 
+            positionArray = {this.state.positionArray} 
+            isTracking    = {this.state.isTracking} 
+            startTracking = {() => this.setState({isTracking: true})}
+            stopTracking  = {() => this.setState({positionArray: [], isTracking: false})} />
+        );
         mapBottomMenuState.home = true;
         title = "Home";
     }
