@@ -115,7 +115,7 @@ class Home extends Component {
         msg.type = type;
     this.setState((prevState) => {
       let arr = prevState.positionArray;
-      arr.push(msg);
+      arr.unshift(msg);
       return { positionArray : arr };
     });
   }
@@ -127,7 +127,7 @@ class Home extends Component {
     this.setState((prevState) => {
       let arr = prevState.positionArray;
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
-        arr.push(lastPosition);
+        arr.unshift(lastPosition);
       }
       return { positionArray : arr };
     });

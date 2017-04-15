@@ -10,15 +10,15 @@ import { round } from '../mathutils';
 export class GeoMainScreen extends Component {
 
   static propTypes = {
-    lastPosition      : React.PropTypes.object,
-    positionArray     : React.PropTypes.arrayOf(React.PropTypes.object),
-    isTracking        : React.PropTypes.bool,
-    startTracking     : React.PropTypes.func,
-    stopTracking      : React.PropTypes.func
+    lastPosition  : React.PropTypes.object,
+    positionArray : React.PropTypes.arrayOf(React.PropTypes.object),
+    isTracking    : React.PropTypes.bool,
+    startTracking : React.PropTypes.func,
+    stopTracking  : React.PropTypes.func
   }
 
   state = {
-    isKmph    : false
+    isKmph : false
   }
 
   getSpeed(speed) {
