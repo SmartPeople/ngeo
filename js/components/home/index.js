@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
-import { Footer, FooterTab } from 'native-base';
+import { Footer, FooterTab, Badge } from 'native-base';
 import BackgroundGeolocation from "react-native-background-geolocation";
 
 import { openDrawer } from '../../actions/drawer';
@@ -194,7 +194,10 @@ class Home extends Component {
               <Icon name="apps" />
               <Text>Home</Text>
             </Button>
-            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} >
+            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
+              <Badge style={styles.footerBadge}>
+                <Text>{this.state.positionArray.length}</Text>
+              </Badge>
               <Icon name="list" />
               <Text>Log</Text>
             </Button>

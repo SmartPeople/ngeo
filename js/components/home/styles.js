@@ -33,5 +33,8 @@ export default {
   smallNote: {
     fontSize: 10,
     color: '#808080'
-  }
+  },
+  footerBadge: {
+    backgroundColor: '#8C97B5'
+  },
 };
