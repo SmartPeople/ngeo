@@ -37,4 +37,8 @@ export default {
   footerBadge: {
     backgroundColor: '#8C97B5'
   },
+  trackingButton: {
+    marginLeft :10, 
+    marginRight: 10
+  }
 };

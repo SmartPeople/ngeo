@@ -1,5 +1,6 @@
+import { Alert } from 'react-native';
 import React, { Component } from 'react';
-import { Text, Icon, Button } from 'native-base';
+import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styles from '../styles';
 import { round } from '../mathutils';
@@ -8,11 +9,13 @@ export class GeoMainScreen extends Component {
 
   static propTypes = {
     lastPosition : React.PropTypes.object,
-    positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
+    positionArray: React.PropTypes.arrayOf(React.PropTypes.object),
+    clearPositionArray: React.PropTypes.func
   }
 
   state = {
-    isKmph: false
+    isKmph    : false,
+    isTracking: false
   }
 
   getSpeed(speed) {
@@ -22,6 +25,30 @@ export class GeoMainScreen extends Component {
 
   toggleSpeedType() {
     this.setState({isKmph: !this.state.isKmph});
+  }
+  
+  startTracking() {
+    this.setState({isTracking: true});
+  }
+
+  stopTracking() {
+    Alert.alert(
+      'Tracking',
+      'Are you sure?',
+      [
+        {
+          text: 'OK', 
+          onPress: () => {
+            this.setState({isTracking: false});
+          }
+        },
+        {
+          text: 'Cancel', 
+          onPress: () => console.log('Cancel Pressed'), 
+          style: 'cancel'
+        }
+      ]
+    );
   }
 
   render() {
@@ -64,7 +91,17 @@ export class GeoMainScreen extends Component {
           </Col>
         </Row>
         <Row style={styles.row}>
-          <Button onPress={() => alert('Hi!') }><Text>Start</Text></Button>
+          <Col size={100}>
+          {this.state.isTracking ? (
+            <Button onPress={() => this.stopTracking() } block danger bordered style={styles.trackingButton} badge>
+              <Text>Stop Tracking</Text>
+            </Button>
+          ) : (
+            <Button onPress={() => this.startTracking() } block success bordered style={styles.trackingButton}>
+              <Text>Start Tracking</Text>
+            </Button>
+          )}
+          </Col>
         </Row>
       </Grid>
     );
