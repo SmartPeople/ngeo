@@ -22,7 +22,8 @@ export class GeoMainScreen extends Component {
   }
 
   getSpeed(speed) {
-    const relSpeed = round((this.state.isKmph ? speed * 3.6 : speed));
+    let relSpeed = speed < 0 ? 0 : speed;
+    relSpeed = round((this.state.isKmph ? relSpeed * 3.6 : relSpeed));
     return relSpeed + ' ' + (this.state.isKmph ? 'km/h' : 'm/s');
   }
 
