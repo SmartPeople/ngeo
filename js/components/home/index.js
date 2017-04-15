@@ -16,8 +16,6 @@ import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
 import uuidV4 from 'uuid/v4';
-// const uuidV4 = require('uuid/v4')
-
 
 export const EVENT_TYPE = {
     "POSITION_MSG"      : 0,
