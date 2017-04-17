@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 
 import MapView from 'react-native-maps';
-import { EVENT_TYPE } from '../index';
+import { EVENT_TYPE } from '../../../services/geo_service';
 
 export class GeoMap extends Component {
 

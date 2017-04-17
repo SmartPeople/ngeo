@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, List, ListItem } from 'native-base';
-import { EVENT_TYPE } from '../index';
+import { EVENT_TYPE } from '../../../services/geo_service';
 import { round, extractLast4 } from '../mathutils';
 
 
