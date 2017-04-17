@@ -6,9 +6,7 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Header, Title, Content, Text, Button, Icon, Left, Body, Right, View } from 'native-base';
 import { Footer, FooterTab, Badge } from 'native-base';
 import BackgroundGeolocation from "react-native-background-geolocation";
-import { geolib } from 'geolib';
 import uuidV4 from 'uuid/v4';
-
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 
