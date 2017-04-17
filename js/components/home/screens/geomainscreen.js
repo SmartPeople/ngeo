@@ -6,6 +6,7 @@ import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styles from '../styles';
 import { round } from '../mathutils';
+import { EVENT_TYPE } from '../index';
 
 export class GeoMainScreen extends Component {
 
@@ -18,13 +19,93 @@ export class GeoMainScreen extends Component {
   }
 
   state = {
-    isKmph : false
+    isKmph : true
+  }
+
+  getSpeedMetricks() {
+    return this.state.isKmph ? 'km/h' : 'm/s';
   }
 
   getSpeed(speed) {
     let relSpeed = speed < 0 ? 0 : speed;
     relSpeed = round((this.state.isKmph ? relSpeed * 3.6 : relSpeed));
-    return relSpeed + ' ' + (this.state.isKmph ? 'km/h' : 'm/s');
+    return relSpeed + ' ' + this.getSpeedMetricks();
+  }
+  
+  getGeoSpeed() {
+    let   out      = '--';
+    const filtered = this.props
+                       .positionArray
+                       .filter((p) => p.type === EVENT_TYPE.POSITION_MSG)
+                       .sort((o1, o2) => +new Date(o1.timestamp) > +new Date(o2.timestamp)),
+        arrayLength = filtered.length;
+    if (arrayLength > 1) {
+      const lastPoint    = filtered[arrayLength - 2];
+      const preLastPoint = filtered[arrayLength - 1];
+
+      out = geolib.getSpeed(
+        {
+          lat : preLastPoint.coords.latitude, 
+          lng : preLastPoint.coords.longitude, 
+          time: +new Date(preLastPoint.timestamp)
+        },
+        {
+          lat : lastPoint.coords.latitude, 
+          lng : lastPoint.coords.longitude, 
+          time: +new Date(lastPoint.timestamp)
+        }
+      );
+    }
+    return (Math.abs(out) > 1000 ? '--' : out) + ' km/h';
+  }
+
+  getAvgSpeed() {
+    let   out      = '--';
+    const filtered = 
+      this.props
+          .positionArray
+          .filter((p) => p.type === EVENT_TYPE.POSITION_MSG)
+          .sort((o1, o2) => o1.timestamp > o2.timestamp),
+        arrayLength = filtered.length;
+    if (arrayLength > 1) {
+      const lastPoint    = filtered[0];
+      const preLastPoint = filtered[arrayLength - 1];
+
+      out = geolib.getSpeed(
+        {
+          lat : preLastPoint.coords.latitude, 
+          lng : preLastPoint.coords.longitude, 
+          time: +new Date(preLastPoint.timestamp)
+        },
+        {
+          lat : lastPoint.coords.latitude, 
+          lng : lastPoint.coords.longitude, 
+          time: +new Date(lastPoint.timestamp)
+        }
+      );
+    }
+    return (Math.abs(out) > 1000 ? '--' : out) + ' km/h';
+  }
+
+  getDistance() {
+    let   out      = '--';
+    const filtered = 
+      this.props
+          .positionArray
+          .filter((p) => p.type === EVENT_TYPE.POSITION_MSG)
+          .sort((o1, o2) => o1.timestamp > o2.timestamp),
+        arrayLength = filtered.length;
+    if (arrayLength > 1) {
+      const points = filtered.map((point) => {
+        return {
+          lat : point.coords.latitude, 
+          lng : point.coords.longitude,
+        }
+      });
+
+      out = geolib.getPathLength(points);
+    }
+    return out + ' m';
   }
 
   toggleSpeedType() {
@@ -78,11 +159,15 @@ export class GeoMainScreen extends Component {
           <Col size={20}>
             <Icon active name="speedometer" style={styles.icon} />
           </Col>
-          <Col size={80}>
+          <Col size={40}>
             <Text style={styles.label} onPress={() => this.toggleSpeedType()}> Speed:</Text>
             <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(GEO)</Text></Text>
-            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(AVG)</Text></Text>
-            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(LATEST)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getAvgSpeed() : '' } <Text style={styles.smallNote}>(AVG)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getGeoSpeed() : '' } <Text style={styles.smallNote}>(LATEST)</Text></Text>
+          </Col>
+          <Col size={40}>
+            <Text style={styles.label}> Distance:</Text>
+            <Text style={styles.param}> {lastPos ? this.getDistance() : '' }</Text>
           </Col>
         </Row>
         <Row style={styles.row}>
