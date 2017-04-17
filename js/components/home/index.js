@@ -10,6 +10,8 @@ import BackgroundGeolocation from "react-native-background-geolocation";
 import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 
+import { GeoService } from '../../services/geo_service';
+
 import styles from './styles';
 
 import { GeolLocationFullList } from './screens/geolocationlogs';
@@ -53,56 +55,16 @@ class Home extends Component {
     }),
   }
 
-
-  lPos            = (location) => this.setPostionToState(location)
-
-  lError          = (error) => this.addMsgToState(error, EVENT_TYPE.ERROR_MSG)
-
-  lMotionChange   = (msg) => this.addMsgToState(msg, EVENT_TYPE.MOTION_CHANGE_MSG)
-
-  lActivityChange = (msg) => this.addMsgToState({message: 'activity change:'+msg}, EVENT_TYPE.ACTIVITY_CHANGE)
-
-  lProviderChange = (msg) => this.addMsgToState(msg, EVENT_TYPE.PROVIDER_CHANGE)
-
-  lStart          = (msg) => {
-    if (!state.enabled) {
-      BackgroundGeolocation.start(function () {
-        console.log("- Start success");
-      });
-    }
-    this.addMsgToState(msg, EVENT_TYPE.START)
-  }
+  geoService = new GeoService();
 
   componentDidMount() {
-    BackgroundGeolocation.on('location', this.lPos);
-    BackgroundGeolocation.on('error', this.lError);
-    BackgroundGeolocation.on('motionchange', this.lMotionChange);
-    BackgroundGeolocation.on('activitychange', this.lActivityChange);
-    BackgroundGeolocation.on('providerchange', this.lProviderChange);
-
-    BackgroundGeolocation.configure({
-      desiredAccuracy: 0,
-      stationaryRadius: 25,
-      distanceFilter: 10,
-      stopTimeout: 1,
-      debug: true,
-      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-      stopOnTerminate: true,
-      startOnBoot: false,
-      preventSuspend : true,
-      heartbeatInterval: 10
-      }, function(state) {
-        console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
-    });
-
+    this.geoService.onPosition(this.setPostionToState.bind(this));
+    this.geoService.onOtherMessage(this.addMsgToState.bind(this));
+    this.geoService.mount();
   }
 
   componentWillUnmount() {
-    BackgroundGeolocation.un('location', this.lPos);
-    BackgroundGeolocation.un('error', this.lError);
-    BackgroundGeolocation.un('motionchange', this.lMotionChange);
-    BackgroundGeolocation.un('activitychange', this.lActivityChange);
-    BackgroundGeolocation.un('providerchange', this.lProviderChange);
+    this.geoService.unmount();
   }
 
   addMsgToState(message, type) {

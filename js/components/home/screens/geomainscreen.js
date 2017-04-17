@@ -6,6 +6,7 @@ import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styles from '../styles';
 import { round } from '../mathutils';
+import { GeoService } from '../../../services/geo_service';
 
 export class GeoMainScreen extends Component {
 
@@ -33,7 +34,7 @@ export class GeoMainScreen extends Component {
   
   startTracking() {
     this.props.startTracking();
-    BackgroundGeolocation.start(() => console.log("- Start success"));
+    GeoService.start();
   }
 
   stopTracking() {
@@ -44,7 +45,7 @@ export class GeoMainScreen extends Component {
         {
           text: 'OK', 
           onPress: () => {
-            BackgroundGeolocation.stop(() => console.log("- Stop success"));
+            GeoService.stop();
             this.props.stopTracking();
           }
         },
