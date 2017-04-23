@@ -11,6 +11,7 @@ import { openDrawer } from '../../actions/drawer';
 import { setIndex } from '../../actions/list';
 
 import { GeoService } from '../../services/geo_service';
+import { ConnectionService } from '../../services/connection_service';
 
 import styles from './styles';
 
@@ -55,12 +56,14 @@ class Home extends Component {
     }),
   }
 
-  geoService = new GeoService();
+  geoService  = new GeoService();
+  connService = new ConnectionService(this.props.name);
 
   componentDidMount() {
     this.geoService.onPosition(this.setPostionToState.bind(this));
     this.geoService.onOtherMessage(this.addMsgToState.bind(this));
     this.geoService.mount();
+    this.connService.connect();
   }
 
   componentWillUnmount() {
@@ -74,6 +77,7 @@ class Home extends Component {
       msg.uuidV4Tracking = prevState.uuidTracking;
       let arr = prevState.positionArray;
       arr.unshift(msg);
+      this.connService.push(msg);
       return { positionArray : arr };
     });
   }
@@ -88,6 +92,7 @@ class Home extends Component {
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
         arr.unshift(lastPosition);
       }
+      this.connService.push(lastPosition);
       return { positionArray : arr };
     });
   }
