@@ -102,13 +102,23 @@ class Home extends Component {
   }
 
   render() {
+    const connInfo = JSON.stringify(this.connService.getInfo(), null, 2);
+    // alert(connInfo);
     let screen, title;
     const mapBottomMenuState = {
       home: false,
       map : false,
-      list: false
+      list: false,
+      conn: false
     }
     switch(this.state.screen) {
+      case 'conn':
+        screen = (
+          <Text>{connInfo}</Text>
+        );
+        mapBottomMenuState.conn = true;
+        title = "Connection";
+        break;
       case 'list':
         screen = (
           <GeolLocationFullList 
@@ -167,6 +177,10 @@ class Home extends Component {
             <Button active={mapBottomMenuState.home} onPress={() => this.switchScreenTo('home')}>
               <Icon name="apps" />
               <Text>Home</Text>
+            </Button>
+            <Button active={mapBottomMenuState.conn} onPress={() => this.switchScreenTo('conn')}>
+              <Icon name="apps" />
+              <Text>Conn</Text>
             </Button>
             <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
               <Badge style={styles.footerBadge}>
