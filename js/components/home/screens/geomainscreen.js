@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { Text, Icon, Button, Badge } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import styles from '../styles';
-import { round, getSomeSpeed, getDistance } from '../mathutils';
+import { round, getSomeSpeed, getDistance } from '../../../utils/mathutils';
 import { GeoService, EVENT_TYPE } from '../../../services/geo_service';
 
 export class GeoMainScreen extends Component {

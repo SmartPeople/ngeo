@@ -18,6 +18,7 @@ import styles from './styles';
 import { GeolLocationFullList } from './screens/geolocationlogs';
 import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
+import { ConnectionScreen } from './screens/connectionscreen';
 
 
 export const EVENT_TYPE = {
@@ -102,7 +103,8 @@ class Home extends Component {
   }
 
   render() {
-    const connInfo = JSON.stringify(this.connService.getInfo(), null, 2);
+    const connInfo = this.connService.getInfo();
+    // const connInfo = JSON.stringify(this.connService.getInfo(), null, 2);
     // alert(connInfo);
     let screen, title;
     const mapBottomMenuState = {
@@ -114,7 +116,7 @@ class Home extends Component {
     switch(this.state.screen) {
       case 'conn':
         screen = (
-          <Text>{connInfo}</Text>
+          <ConnectionScreen connInfo={connInfo}/>
         );
         mapBottomMenuState.conn = true;
         title = "Connection";
@@ -178,8 +180,11 @@ class Home extends Component {
               <Icon name="apps" />
               <Text>Home</Text>
             </Button>
-            <Button active={mapBottomMenuState.conn} onPress={() => this.switchScreenTo('conn')}>
-              <Icon name="apps" />
+            <Button active={mapBottomMenuState.conn} onPress={() => this.switchScreenTo('conn')} badge>
+              <Badge style={styles.footerBadge}>
+                <Text>{connInfo.ping_number}</Text>
+              </Badge>
+              <Icon name="cloudy" />
               <Text>Conn</Text>
             </Button>
             <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
