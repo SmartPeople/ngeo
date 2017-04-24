@@ -46,12 +46,12 @@ class Home extends Component {
   }
 
   static propTypes = {
-    name: React.PropTypes.string,
-    list: React.PropTypes.arrayOf(React.PropTypes.string),
-    setIndex: React.PropTypes.func,
+    name      : React.PropTypes.string,
+    list      : React.PropTypes.arrayOf(React.PropTypes.string),
+    setIndex  : React.PropTypes.func,
     openDrawer: React.PropTypes.func,
-    pushRoute: React.PropTypes.func,
-    reset: React.PropTypes.func,
+    pushRoute : React.PropTypes.func,
+    reset     : React.PropTypes.func,
     navigation: React.PropTypes.shape({
       key: React.PropTypes.string,
     }),
@@ -89,7 +89,7 @@ class Home extends Component {
     this.setState({ lastPosition });
     this.setState((prevState) => {
       lastPosition.uuidV4Tracking = prevState.uuidTracking;
-      let arr = prevState.positionArray;
+      let arr = prevState.positionArray.slice(0, 99);
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
         arr.unshift(lastPosition);
       }
@@ -202,7 +202,7 @@ class Home extends Component {
             </Button>
             <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
               <Badge style={styles.footerBadge}>
-                <Text>{this.state.positionArray.length}</Text>
+                <Text>{this.state.positionArray.length == 100 ? '99+' : this.state.positionArray.length}</Text>
               </Badge>
               <Icon name="list" />
               <Text>Log</Text>
