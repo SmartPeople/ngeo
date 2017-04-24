@@ -47,7 +47,7 @@ export class ConnectionScreen extends Component {
             <Text style={styles.param}> {this.timestamptoDate(connInfo.connTime)}</Text>
             <Text style={styles.label}> Traffic:</Text>
             <Text style={styles.param}> Out: {this.convertTraffic(connInfo.traffic.outbound)}</Text>
-            <Text style={styles.param}> In : {this.convertTraffic(connInfo.traffic.inbound)}</Text>
+            <Text style={styles.param}> In   : {this.convertTraffic(connInfo.traffic.inbound)}</Text>
           </Col>
         </Row>
       </Grid>

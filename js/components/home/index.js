@@ -101,11 +101,8 @@ class Home extends Component {
   switchScreenTo(name) {
     this.setState({ screen: name });
   }
-
-  render() {
-    const connInfo = this.connService.getInfo();
-    // const connInfo = JSON.stringify(this.connService.getInfo(), null, 2);
-    // alert(connInfo);
+  
+  chooseScreen() {
     let screen, title;
     const mapBottomMenuState = {
       home: false,
@@ -113,6 +110,7 @@ class Home extends Component {
       list: false,
       conn: false
     }
+    const connInfo = this.connService.getInfo();
     switch(this.state.screen) {
       case 'conn':
         screen = (
@@ -151,6 +149,21 @@ class Home extends Component {
         mapBottomMenuState.home = true;
         title = "Home";
     }
+    return {
+      screen: screen, 
+      title: title, 
+      mapBottomMenuState: mapBottomMenuState
+    };
+  }
+
+  render() {
+    
+    const connInfo = this.connService.getInfo();
+    
+    const params = this.chooseScreen();
+    const screen = params.screen, 
+          title  = params.title, 
+          mapBottomMenuState = params.mapBottomMenuState;
 
     return (
       <Container style={styles.container}>
