@@ -6,9 +6,9 @@ export class ConnectionService {
   channel;
   connTime      = 0;
   channelName   = 'geo:data';
-  url           = 'http://localhost:4000/socket';
+  // url           = 'http://localhost:4000/socket';
   // url        = 'http://192.168.99.99:4000/socket';
-  // url        = 'http://45.55.196.58:4000/socket';
+  url        = 'http://45.55.196.58:4000/socket';
   lastStatus    = '';
   pingDelay     = 0;
   pingTimestamp = + new Date();

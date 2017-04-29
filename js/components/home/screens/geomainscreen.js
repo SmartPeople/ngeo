@@ -114,6 +114,8 @@ export class GeoMainScreen extends Component {
           <Col size={30}>
             <Text style={styles.label}> Distance:</Text>
             <Text style={styles.param}> {lastPos ? this.getDistance() : '' }</Text>
+            <Text style={styles.label}> # of Points:</Text>
+            <Text style={styles.param}> {this.props.positionArray.length}</Text>
           </Col>
         </Row>
         <Row style={styles.row}>

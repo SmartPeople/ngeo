@@ -89,7 +89,7 @@ class Home extends Component {
     this.setState({ lastPosition });
     this.setState((prevState) => {
       lastPosition.uuidV4Tracking = prevState.uuidTracking;
-      let arr = prevState.positionArray.slice(0, 99);
+      let arr = prevState.positionArray;
       if (!arr.find( (p) => p.timestamp === lastPosition.timestamp)) {
         arr.unshift(lastPosition);
       }
@@ -123,10 +123,10 @@ class Home extends Component {
         screen = (
           <GeolLocationFullList 
             lastPosition  = {this.state.lastPosition} 
-            positionArray = {this.state.positionArray} />
+            positionArray = {this.state.positionArray.slice(0, 50)} />
         );
         mapBottomMenuState.list = true;
-        title = "My Log";
+        title = "Log Of Last 25";
         break;
       case 'map':
         screen = (
@@ -200,14 +200,14 @@ class Home extends Component {
               <Icon name="cloudy" />
               <Text>Conn</Text>
             </Button>
-            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
-              <Badge style={styles.footerBadge}>
-                <Text>{this.state.positionArray.length == 100 ? '99+' : this.state.positionArray.length}</Text>
-              </Badge>
+            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')}>
               <Icon name="list" />
               <Text>Log</Text>
             </Button>
-            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('map')} >
+            <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('map')} badge>
+              <Badge style={styles.footerBadge}>
+                <Text>{this.state.positionArray.length}</Text>
+              </Badge>
               <Icon active name="map" />
               <Text>Map</Text>
             </Button>
