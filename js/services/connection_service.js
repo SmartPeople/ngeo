@@ -19,7 +19,7 @@ export class ConnectionService {
   }
 
   constructor(userName, userToken) {
-    alert("!2333");
+
     this.userName = userName;
     this.socket = new Socket(this.url, {
       params: {token: userToken},

@@ -56,8 +56,16 @@ class Home extends Component {
     }),
   }
 
+  getUserEmail() {
+    return this.props.name.email;
+  }
+
+  getUserToken() {
+    return this.props.name.token;
+  }
+
   geoService  = new GeoService();
-  connService = new ConnectionService(this.props.name[0], this.props.name[1]); //TODO: Fix that, change to token!
+  connService = new ConnectionService(this.getUserEmail(), this.getUserToken()); //TODO: Fix that, change to token!
 
   componentDidMount() {
     this.geoService.onPosition(this.setPostionToState.bind(this));
@@ -156,7 +164,7 @@ class Home extends Component {
   }
 
   render() {
-    
+
     const connInfo = this.connService.getInfo();
     
     const params = this.chooseScreen();
