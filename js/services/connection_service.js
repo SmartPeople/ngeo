@@ -6,9 +6,9 @@ export class ConnectionService {
   channel;
   connTime      = 0;
   channelName   = 'geo:data';
-  // url           = 'http://localhost:4000/socket';
+  url           = 'http://localhost:4000/socket';
   // url        = 'http://192.168.99.99:4000/socket';
-  url        = 'http://45.55.196.58:4000/socket';
+  // url        = 'http://45.55.196.58:4000/socket';
   lastStatus    = '';
   pingDelay     = 0;
   pingTimestamp = + new Date();
@@ -18,10 +18,11 @@ export class ConnectionService {
     "outbound" : 0
   }
 
-  constructor(userName) {
+  constructor(userName, userToken) {
+
     this.userName = userName;
     this.socket = new Socket(this.url, {
-      // params: {token: window.userToken}
+      params: {token: userToken},
       logger: ((kind, msg, data) => { console.log(`${kind}: ${msg}`, data) })
     });
     this.socket.onOpen( ev => console.log("OPEN", ev));
@@ -30,7 +31,7 @@ export class ConnectionService {
   }
 
   connect() {
-    this.socket.connect({user_id: this.userName});
+    this.socket.connect();
     this.channel = this.socket.channel(this.channelName, {});
     this.channel.join()
       .receive("ignore", () => { alert("auth error")

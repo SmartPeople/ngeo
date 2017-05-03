@@ -34,7 +34,6 @@ const {
   reset
 } = actions;
 
-
 class Home extends Component {
 
   state = {
@@ -57,8 +56,16 @@ class Home extends Component {
     }),
   }
 
+  getUserEmail() {
+    return this.props.name.email;
+  }
+
+  getUserToken() {
+    return this.props.name.token;
+  }
+
   geoService  = new GeoService();
-  connService = new ConnectionService(this.props.name);
+  connService = new ConnectionService(this.getUserEmail(), this.getUserToken());
 
   componentDidMount() {
     this.geoService.onPosition(this.setPostionToState.bind(this));
@@ -157,7 +164,7 @@ class Home extends Component {
   }
 
   render() {
-    
+
     const connInfo = this.connService.getInfo();
     
     const params = this.chooseScreen();
@@ -206,7 +213,7 @@ class Home extends Component {
             </Button>
             <Button active={mapBottomMenuState.map} last onPress={() => this.switchScreenTo('map')} badge>
               <Badge style={styles.footerBadge}>
-                <Text>{this.state.positionArray.length}</Text>
+                <Text>{this.state.positionArray.filter((p) => p.type === EVENT_TYPE.POSITION_MSG).length}</Text>
               </Badge>
               <Icon active name="map" />
               <Text>Map</Text>

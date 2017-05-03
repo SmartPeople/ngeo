@@ -16,6 +16,8 @@ const background = require('../../../images/s.png');
 
 class Login extends Component {
 
+  url = 'http://localhost:4000/api/login';
+
   static propTypes = {
     setUser: React.PropTypes.func,
     replaceAt: React.PropTypes.func,
@@ -27,17 +29,43 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      email      : '',
+      password   : '',
+      invalidate : false
     };
   }
 
-  setUser(name) {
-    this.props.setUser(name);
+  setUser(name, token) {
+    this.props.setUser(name, token);
   }
 
   replaceRoute(route) {
-    this.setUser(this.state.name);
-    this.props.replaceAt('login', { key: route }, this.props.navigation.key);
+    this.setState({invalidate: false});
+
+    //TODO: Move to the separate service?
+    fetch(this.url, {
+      method: 'POST',
+      headers: {
+        'Accept'      : 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state)
+    }).then((response) => {
+      return response.json();
+    }).then((json) => {
+      if ( json['user']) {
+        this.setUser(this.state.email, json['token']);
+        this.props.replaceAt('login', { key: route }, this.props.navigation.key);
+      } else {
+        this.setState({invalidate: true});
+      }
+      return json;
+    }).catch((error) => {
+      alert(JSON.stringify(error, null, 2));
+      this.setState({invalidate: true});
+      return error;
+    });
+
   }
 
   render() {
@@ -47,15 +75,19 @@ class Login extends Component {
           <Content>
             <Image source={background} style={styles.shadow}>
               <View style={styles.bg}>
-                <Item style={styles.input}>
+                <Item style={styles.input} floatingLabel error={this.state.invalidate}>
                   <Icon active name="person" />
-                  <Input placeholder="EMAIL" onChangeText={name => this.setState({ name })} />
+                  <Input 
+                    placeholder="EMAIL" 
+                    onChangeText={email => this.setState({ email })} 
+                  />
                 </Item>
-                <Item style={styles.input}>
+                <Item style={styles.input} floatingLabel error={this.state.invalidate}>
                   <Icon name="unlock" />
                   <Input
                     placeholder="PASSWORD"
                     secureTextEntry
+                    onChangeText={password => this.setState({ password })}
                   />
                 </Item>
                 <Button style={styles.btn} onPress={() => this.replaceRoute('home')}>
@@ -73,7 +105,7 @@ class Login extends Component {
 function bindActions(dispatch) {
   return {
     replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
-    setUser: name => dispatch(setUser(name)),
+    setUser: (name, token) => dispatch(setUser(name, token)),
   };
 }
 
