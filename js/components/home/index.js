@@ -65,7 +65,7 @@ class Home extends Component {
   }
 
   geoService  = new GeoService();
-  connService = new ConnectionService(this.getUserEmail(), this.getUserToken()); //TODO: Fix that, change to token!
+  connService = new ConnectionService(this.getUserEmail(), this.getUserToken());
 
   componentDidMount() {
     this.geoService.onPosition(this.setPostionToState.bind(this));

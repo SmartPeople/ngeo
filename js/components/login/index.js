@@ -29,8 +29,9 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email   : '',
-      password: '',
+      email      : '',
+      password   : '',
+      invalidate : false
     };
   }
 
@@ -39,7 +40,9 @@ class Login extends Component {
   }
 
   replaceRoute(route) {
+    this.setState({invalidate: false});
 
+    //TODO: Move to the separate service?
     fetch(this.url, {
       method: 'POST',
       headers: {
@@ -54,11 +57,12 @@ class Login extends Component {
         this.setUser(this.state.email, json['token']);
         this.props.replaceAt('login', { key: route }, this.props.navigation.key);
       } else {
-        alert('Wrong username or/and password');
+        this.setState({invalidate: true});
       }
       return json;
     }).catch((error) => {
       alert(JSON.stringify(error, null, 2));
+      this.setState({invalidate: true});
       return error;
     });
 
@@ -71,14 +75,14 @@ class Login extends Component {
           <Content>
             <Image source={background} style={styles.shadow}>
               <View style={styles.bg}>
-                <Item style={styles.input}>
+                <Item style={styles.input} floatingLabel error={this.state.invalidate}>
                   <Icon active name="person" />
                   <Input 
                     placeholder="EMAIL" 
                     onChangeText={email => this.setState({ email })} 
                   />
                 </Item>
-                <Item style={styles.input}>
+                <Item style={styles.input} floatingLabel error={this.state.invalidate}>
                   <Icon name="unlock" />
                   <Input
                     placeholder="PASSWORD"
