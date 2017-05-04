@@ -36,12 +36,15 @@ const {
 
 class Home extends Component {
 
+  intervalHendler;
+
   state = {
     screen       : 'home',
     lastPosition : undefined,
     positionArray: [],
     isTracking   : false,
-    uuidTracking : null
+    uuidTracking : null,
+    connInfo     : {}
   }
 
   static propTypes = {
@@ -72,10 +75,15 @@ class Home extends Component {
     this.geoService.onOtherMessage(this.addMsgToState.bind(this));
     this.geoService.mount();
     this.connService.connect();
+
+    intervalHendler = setInterval(()=>{
+      this.setState({connInfo : this.connService.getInfo()});
+    }, 1000);
   }
 
   componentWillUnmount() {
     this.geoService.unmount();
+    clearInterval(intervalHendler);
   }
 
   addMsgToState(message, type) {
@@ -117,12 +125,11 @@ class Home extends Component {
       list: false,
       conn: false
     }
-    const connInfo = this.connService.getInfo();
     switch(this.state.screen) {
       case 'conn':
         screen = (
           <ConnectionScreen 
-            connInfo      = {connInfo}
+            connInfo      = {this.state.connInfo}
             positionArray = {this.state.positionArray} 
             />
         );
@@ -167,8 +174,6 @@ class Home extends Component {
   }
 
   render() {
-
-    const connInfo = this.connService.getInfo();
     
     const params = this.chooseScreen();
     const screen = params.screen, 
@@ -205,7 +210,7 @@ class Home extends Component {
             </Button>
             <Button active={mapBottomMenuState.conn} onPress={() => this.switchScreenTo('conn')} badge>
               <Badge style={styles.footerBadge}>
-                <Text>{connInfo.ping_number}</Text>
+                <Text>{this.state.connInfo ? this.state.connInfo.ping_number : ''}</Text>
               </Badge>
               <Icon name="cloudy" />
               <Text>Conn</Text>
