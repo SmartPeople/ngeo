@@ -37,22 +37,7 @@ $ react-native link
 
 ### 3. Simulate for iOS
 
-**Method One**
-
 *	Open the project in XCode from **ios/NativeStarterKit.xcodeproj**
 
 *	Hit the play button.
 
-
-**Method Two**
-
-*	Run the following command in your terminal
-
-```sh
-$ react-native run-ios
-```
-
-Note: If you are building Native Starter Kit for first time on your system, please follow Method One to simulate on iOS. (To link the CodePush plugin through Xcode for iOS)
-
-
-For apps with more advance designs, please visit **[StrapMobile](https://strapmobile.com/)**.

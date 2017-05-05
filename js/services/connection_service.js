@@ -1,14 +1,13 @@
 import { Socket } from '../vendors/phoenix';
 import { objectToSize } from '../utils/mathutils';
+import { Settings } from "./settings";
 
 export class ConnectionService {
 
   channel;
   connTime      = 0;
   channelName   = 'geo:data';
-  url           = 'http://localhost:4000/socket';
-  // url        = 'http://192.168.99.99:4000/socket';
-  // url        = 'http://45.55.196.58:4000/socket';
+  url           = Settings.dataUrl;
   lastStatus    = '';
   pingDelay     = 0;
   pingTimestamp = + new Date();

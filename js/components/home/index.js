@@ -20,16 +20,6 @@ import { GeoMainScreen } from './screens/geomainscreen';
 import { GeoMap } from './screens/geomap';
 import { ConnectionScreen } from './screens/connectionscreen';
 
-
-// export const EVENT_TYPE = {
-//     "POSITION_MSG"      : 0,
-//     "ERROR_MSG"         : 1,
-//     "MOTION_CHANGE_MSG" : 2,
-//     "ACTIVITY_CHANGE"   : 3,
-//     "PROVIDER_CHANGE"   : 4,
-//     "START"             : 5
-// };
-
 const {
   reset
 } = actions;
