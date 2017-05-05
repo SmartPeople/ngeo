@@ -48,6 +48,10 @@ export class GeolLocationFullList extends Component {
     return this.props.positionArray.filter((p) => p.type === event_type).length;
   }
 
+  getLastEvents() {
+    return this.props.positionArray.slice(0, 50);
+  }
+
   render() {
     return (
       <Grid>
@@ -73,7 +77,7 @@ export class GeolLocationFullList extends Component {
         <Row style={styles.row}>
           <Col size={100}>
             <List
-              dataArray = {this.props.positionArray}
+              dataArray = {this.getLastEvents()}
               renderRow = { (p) =>
                 <ListItem key={p.timestamp} button onPress={() => { AlertJson(p) }}>
                   {line(p)}

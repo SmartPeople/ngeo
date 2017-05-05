@@ -127,10 +127,10 @@ class Home extends Component {
         screen = (
           <GeolLocationFullList 
             lastPosition  = {this.state.lastPosition} 
-            positionArray = {this.state.positionArray.slice(0, 50)} />
+            positionArray = {this.state.positionArray} />
         );
         mapBottomMenuState.list = true;
-        title = "Log Of Last 25";
+        title = "Log Of Last 50";
         break;
       case 'map':
         screen = (
