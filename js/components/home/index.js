@@ -118,10 +118,7 @@ class Home extends Component {
     switch(this.state.screen) {
       case 'conn':
         screen = (
-          <ConnectionScreen 
-            connInfo      = {this.state.connInfo}
-            positionArray = {this.state.positionArray} 
-            />
+          <ConnectionScreen connInfo = {this.state.connInfo} />
         );
         mapBottomMenuState.conn = true;
         title = "Connection";

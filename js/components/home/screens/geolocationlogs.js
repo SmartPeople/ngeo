@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, List, ListItem } from 'native-base';
+import { Text, List, ListItem, Icon } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 import { EVENT_TYPE } from '../../../services/geo_service';
 import { round, extractLast4 } from '../../../utils/mathutils';
-
+import styles from '../styles';
 
 function geoLine(p) {
   return (
@@ -39,16 +40,49 @@ export class GeolLocationFullList extends Component {
     positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
   }
 
+  getTotalEvents() {
+    return this.props.positionArray.length;
+  }
+
+  getNunEvents(event_type) {
+    return this.props.positionArray.filter((p) => p.type === event_type).length;
+  }
+
   render() {
     return (
-      <List
-        dataArray = {this.props.positionArray}
-        renderRow = { (p) =>
-          <ListItem key={p.timestamp} button onPress={() => { AlertJson(p) }}>
-            {line(p)}
-          </ListItem>
-        }
-      ></List>
+      <Grid>
+        <Row style={styles.row}>
+          <Col size={20}><Icon active name="sync" style={styles.icon} /></Col>
+          <Col size={40}>
+            <Text style={styles.label}> # Events:</Text>
+            <Text style={styles.param}> {this.getTotalEvents()}</Text>
+            <Text style={styles.label}> # Positions:</Text>
+            <Text style={styles.param}> {this.getNunEvents(EVENT_TYPE.POSITION_MSG)}</Text>
+            <Text style={styles.label}> # Motions:</Text>
+            <Text style={styles.param}> {this.getNunEvents(EVENT_TYPE.MOTION_CHANGE_MSG)}</Text>
+          </Col>
+          <Col size={40}>
+            <Text style={styles.label}> # Errors/Starts:</Text>
+            <Text style={styles.param}> {this.getNunEvents(EVENT_TYPE.ERROR_MSG)}/{this.getNunEvents(EVENT_TYPE.START)}</Text>
+            <Text style={styles.label}> # Activities:</Text>
+            <Text style={styles.param}> {this.getNunEvents(EVENT_TYPE.ACTIVITY_CHANGE)}</Text>
+            <Text style={styles.label}> # Providers:</Text>
+            <Text style={styles.param}> {this.getNunEvents(EVENT_TYPE.PROVIDER_CHANGE)}</Text>
+          </Col>
+        </Row>
+        <Row style={styles.row}>
+          <Col size={100}>
+            <List
+              dataArray = {this.props.positionArray}
+              renderRow = { (p) =>
+                <ListItem key={p.timestamp} button onPress={() => { AlertJson(p) }}>
+                  {line(p)}
+                </ListItem>
+              }
+            ></List>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 
