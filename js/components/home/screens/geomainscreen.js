@@ -44,12 +44,6 @@ export class GeoMainScreen extends Component {
     return getSomeSpeed(filtered, 1, 0);
   }
 
-  getAvgSpeed() {
-    const filtered    = this.filteredArray(),
-          arrayLength = filtered.length;
-    return getSomeSpeed(filtered, filtered.length - 1, 0);
-  }
-
   getDistance() {
     return getDistance(this.filteredArray());
   }
@@ -107,15 +101,12 @@ export class GeoMainScreen extends Component {
           </Col>
           <Col size={50}>
             <Text style={styles.label} onPress={() => this.toggleSpeedType()}> Speed:</Text>
-            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(GEO)</Text></Text>
-            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getAvgSpeed() : '' } <Text style={styles.smallNote}>(AVG)</Text></Text>
-            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getGeoSpeed() : '' } <Text style={styles.smallNote}>(LATEST)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getSpeed(lastPos.coords.speed) : '' } <Text style={styles.smallNote}>(hardware)</Text></Text>
+            <Text style={styles.param} onPress={() => this.toggleSpeedType()}> {lastPos ? this.getGeoSpeed() : '' } <Text style={styles.smallNote}>(Software)</Text></Text>
           </Col>
           <Col size={30}>
             <Text style={styles.label}> Distance:</Text>
             <Text style={styles.param}> {lastPos ? this.getDistance() : '' }</Text>
-            <Text style={styles.label}> # of Events:</Text>
-            <Text style={styles.param}> {this.props.positionArray.length}</Text>
           </Col>
         </Row>
         <Row style={styles.row}>

@@ -200,7 +200,10 @@ class Home extends Component {
               <Icon name="cloudy" />
               <Text>Conn</Text>
             </Button>
-            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')}>
+            <Button active={mapBottomMenuState.list} onPress={() => this.switchScreenTo('list')} badge>
+              <Badge style={styles.footerBadge}>
+                <Text>{this.state.positionArray.length}</Text>
+              </Badge>
               <Icon name="list" />
               <Text>Log</Text>
             </Button>
