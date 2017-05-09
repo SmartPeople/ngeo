@@ -11,7 +11,7 @@ export class GeoMap extends Component {
   static LONGITUDE_DELTA = 0.0421;
 
   state = {
-    followToUser : false
+    jumpToLast : false
   }
 
   static propTypes = {
@@ -27,29 +27,25 @@ export class GeoMap extends Component {
     return poss.length > 0 ? this.getPositions()[poss.length-1] : undefined;
   }
 
-  getLastPosition() { //I mean first
+  getLastPosition() {
     return this.getPositions()[0];
   }
 
-  goToNewRegion() {
-    const lastPos = this.getLastPosition();
-    return {
-      region: new MapView.AnimatedRegion({
-        latitude      : lastPos.coords.latitude,
-        longitude     : lastPos.coords.longitude,
-        latitudeDelta : GeoMap.LATITUDE_DELTA,
-        longitudeDelta: GeoMap.LONGITUDE_DELTA,
-      }),
-    };
-  }
-
   render() {
-    let initPost = this.getInitialPosition();
+    let initPost   = this.getInitialPosition(),
+        positionTo = null;
 
     if(initPost) {
       const posArr  = this.getPositions(),
-            lastPos = this.getLastPosition()
+            lastPos = this.getLastPosition();
       
+      if(this.state.jumpToLast) {
+        positionTo = this.getLastPosition().coords;
+        positionTo.latitudeDelta  = GeoMap.LATITUDE_DELTA/10;
+        positionTo.longitudeDelta = GeoMap.LONGITUDE_DELTA/10;
+        this.setState({jumpToLast: false});
+      }
+
       return (
         <View style={{
           position: 'relative'
@@ -65,6 +61,7 @@ export class GeoMap extends Component {
               latitudeDelta : GeoMap.LATITUDE_DELTA,
               longitudeDelta: GeoMap.LONGITUDE_DELTA
             }}
+            region = {positionTo}
           >
             {posArr.map(marker => (
               <MapView.Marker 
@@ -75,7 +72,7 @@ export class GeoMap extends Component {
               />
             ))}
           </MapView>
-          <Button onPress = {() => alert('Hi1')} 
+          <Button onPress = {() => this.setState({jumpToLast: true})}
               style={{
                 position : 'absolute',
                 top      : Dimensions.get('window').height - 170,
