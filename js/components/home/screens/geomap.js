@@ -47,9 +47,7 @@ export class GeoMap extends Component {
       }
 
       return (
-        <View style={{
-          position: 'relative'
-        }}>
+        <View style={{position: 'relative'}}>
           <MapView
             style = {{ 
               height: Dimensions.get('window').height,
@@ -80,7 +78,7 @@ export class GeoMap extends Component {
                 textAlign: 'center'
               }}
               >
-              <Text style={{textAlign:'center'}}>To Last</Text>
+              <Text>To Last</Text>
           </Button>
         </View>
         );
