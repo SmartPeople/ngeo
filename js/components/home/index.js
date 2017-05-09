@@ -134,9 +134,7 @@ class Home extends Component {
         break;
       case 'map':
         screen = (
-          <GeoMap 
-            lastPosition  = {this.state.lastPosition} 
-            positionArray = {this.state.positionArray} />
+          <GeoMap positionArray = {this.state.positionArray} />
         );
         mapBottomMenuState.map = true;
         title = "Map";

@@ -2,44 +2,93 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 
 import MapView from 'react-native-maps';
+import { Button, Text, View } from 'native-base';
 import { EVENT_TYPE } from '../../../services/geo_service';
 
 export class GeoMap extends Component {
 
+  static LATITUDE_DELTA  = 0.0922;
+  static LONGITUDE_DELTA = 0.0421;
+
+  state = {
+    followToUser : false
+  }
+
   static propTypes = {
-    lastPosition : React.PropTypes.object,
     positionArray: React.PropTypes.arrayOf(React.PropTypes.object)
   }
 
+  getPositions() {
+    return this.props.positionArray.filter((p) => p.type === EVENT_TYPE.POSITION_MSG);
+  }
+
+  getInitialPosition() {
+    const poss = this.getPositions();
+    return poss.length > 0 ? this.getPositions()[poss.length-1] : undefined;
+  }
+
+  getLastPosition() { //I mean first
+    return this.getPositions()[0];
+  }
+
+  goToNewRegion() {
+    const lastPos = this.getLastPosition();
+    return {
+      region: new MapView.AnimatedRegion({
+        latitude      : lastPos.coords.latitude,
+        longitude     : lastPos.coords.longitude,
+        latitudeDelta : GeoMap.LATITUDE_DELTA,
+        longitudeDelta: GeoMap.LONGITUDE_DELTA,
+      }),
+    };
+  }
+
   render() {
-    let lastPos  = this.props.lastPosition;
-    const posArr = this.props.positionArray.filter((p) => p.type === EVENT_TYPE.POSITION_MSG);
-    if(!lastPos) {
-      lastPos = {
-        coords : {
-          latitude : -34.397,
-          longitude: 150.644
-        }
-      }
+    let initPost = this.getInitialPosition();
+
+    if(initPost) {
+      const posArr  = this.getPositions(),
+            lastPos = this.getLastPosition()
+      
+      return (
+        <View style={{
+          position: 'relative'
+        }}>
+          <MapView
+            style = {{ 
+              height: Dimensions.get('window').height,
+              width : Dimensions.get('window').width
+            }}
+            initialRegion = {{
+              latitude      : initPost.coords.latitude,
+              longitude     : initPost.coords.longitude,
+              latitudeDelta : GeoMap.LATITUDE_DELTA,
+              longitudeDelta: GeoMap.LONGITUDE_DELTA
+            }}
+          >
+            {posArr.map(marker => (
+              <MapView.Marker 
+                key         = {marker.timestamp}
+                coordinate  = {marker.coords}
+                title       = {marker.timestamp.toString()}
+                description = {marker.coords.speed.toString()}
+              />
+            ))}
+          </MapView>
+          <Button onPress = {() => alert('Hi1')} 
+              style={{
+                position : 'absolute',
+                top      : Dimensions.get('window').height - 170,
+                left     : 10,
+                textAlign: 'center'
+              }}
+              >
+              <Text style={{textAlign:'center'}}>To Last</Text>
+          </Button>
+        </View>
+        );
+    } else {
+      return null;
     }
-    return (
-      <MapView
-        style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width}}
-        region={{
-          latitude      : lastPos.coords.latitude,
-          longitude     : lastPos.coords.longitude,
-          latitudeDelta : 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        {posArr.map(marker => (
-          <MapView.Marker key={marker.timestamp}
-            coordinate={marker.coords}
-            title={marker.timestamp.toString()}
-            description={marker.coords.speed.toString()}
-          />
-        ))}
-      </MapView>
-    );
   }
 }
