@@ -31,6 +31,17 @@ export class GeoMap extends Component {
     return this.getPositions()[0];
   }
 
+  getColor(indx) {
+    switch(indx){
+      case 0:
+        return 'red';
+      case this.getPositions().length - 1:
+        return 'blue';
+      default:
+        return 'lightgray'
+    }
+  }
+
   render() {
     let initPost   = this.getInitialPosition(),
         positionTo = null;
@@ -41,8 +52,8 @@ export class GeoMap extends Component {
       
       if(this.state.jumpToLast) {
         positionTo = this.getLastPosition().coords;
-        positionTo.latitudeDelta  = GeoMap.LATITUDE_DELTA/10;
-        positionTo.longitudeDelta = GeoMap.LONGITUDE_DELTA/10;
+        positionTo.latitudeDelta  = GeoMap.LATITUDE_DELTA/25;
+        positionTo.longitudeDelta = GeoMap.LONGITUDE_DELTA/25;
         this.setState({jumpToLast: false});
       }
 
@@ -61,12 +72,13 @@ export class GeoMap extends Component {
             }}
             region = {positionTo}
           >
-            {posArr.map(marker => (
+            {posArr.map((marker, indx) => (
               <MapView.Marker 
                 key         = {marker.timestamp}
                 coordinate  = {marker.coords}
                 title       = {marker.timestamp.toString()}
                 description = {marker.coords.speed.toString()}
+                pinColor    = {this.getColor(indx)}
               />
             ))}
           </MapView>
