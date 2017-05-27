@@ -16,7 +16,7 @@ export class GeoService {
     desiredAccuracy  : 0,
     stationaryRadius : 25,
     distanceFilter   : 10,
-    stopTimeout      : 1,
+    stopTimeout      : 10,
     debug            : false,
     logLevel         : BackgroundGeolocation.LOG_LEVEL_VERBOSE,
     stopOnTerminate  : true,
