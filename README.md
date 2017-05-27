@@ -6,11 +6,9 @@ Example project based on the Native Starter Kit v6.0.0
 The main aim of the application to gather geo points and send it to the server via websockets for analysis. Additionally application shows last information from geo mobile subsystem, list of events, basic connection information and map of captured geo points.
 
 ## Screens
-[Login](/images/screens/1.png)
-[Main](/images/screens/2.png)
-[Connection](/images/screens/3.png)
-[List of message](/images/screens/4.png)
-[Map](/images/screens/5.png)
+Login | Main | Connection | List of message | Map
+------------ | ------------- | ------------- | ------------- | -------------
+![Login](/images/screens/1.png) | ![Main](/images/screens/2.png) | ![Connection](/images/screens/3.png) | ![List of message](/images/screens/4.png) | ![Map](/images/screens/5.png)
 
 ## Get Started
 
