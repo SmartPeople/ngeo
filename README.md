@@ -1,6 +1,11 @@
 
 # NGEO 
-Example project based on the Native Starter Kit v6.0.0
+Example project based on the Native Starter Kit v6.0.0.
+
+Tech list:
+* React Native
+* Redux
+* React Native Background Geolocation
 
 ## Short description
 The main aim of the application to gather geo points and send it to the server via websockets for analysis. Additionally application shows last information from geo mobile subsystem, list of events, basic connection information and map of captured geo points.
